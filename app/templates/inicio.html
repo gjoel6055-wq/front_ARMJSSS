@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Gestor Universitario FIUBA{% endblock %}
+
+{% block content %}
+<div class="inicio-container">
+    <header class="hero-section">
+        <h1>Bienvenido al Gestor Universitario</h1>
+        <p class="subtitulo">
+            La plataforma centralizada para la gestión de cursos, alumnos y evaluaciones de la Facultad de Ingeniería.
+        </p>
+
+    </header>
+
+    <section class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎓</div>
+            <h3>Para Alumnos</h3>
+            <p>Consulta tus cursos inscritos, haz el seguimiento de tus evaluaciones en tiempo real y gestiona tus trámites académicos de forma ágil.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Para Docentes</h3>
+            <p>Administra las actas de cursada, registra los logs de actividad, gestiona las notas de exámenes y mantén el contacto directo con tus alumnos.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Seguro y Confiable</h3>
+            <p>Autenticación protegida por roles para garantizar que tus datos académicos e información de usuario estén siempre resguardados.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}
