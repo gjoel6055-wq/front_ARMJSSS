@@ -4,25 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gestor Universitario FIUBA{% endblock %}</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="/" class="navbar-brand" id="titulo-navbar">Gestor Universitario FIUBA</a>
+        <a href="/" class="navbar-logo">Sistema FIUBA</a>
         <ul>
-            <li id="nav-item-ingresar" style="display: none;">
-                <a href="/login">Ingresar</a>
-            </li>
+        <li><a href="{{ url_for('auth.login') }}">Iniciar Sesión</a></li>
+
+        <li><a href="{{ url_for('auth.registro') }}" class="btn-navbar-registro">Crear Cuenta</a></li>
         </ul>
     </nav>
 
-    <main class="container">
+    <main class="contenedor">
         {% block content %}
         {% endblock %}
     </main>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <footer class="pie-pagina">
+        <div class="footer-contenido">
+            <p class="contenido-footer">2026 Sistema FIUBA - Gestión de Cursos.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
