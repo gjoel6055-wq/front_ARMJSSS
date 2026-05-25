@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Enviar QRs de Asistencia - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="login-wrapper" style="min-height: auto; margin-top: 2rem;">
+    <div class="login-card" style="max-width: 550px;">
+        <h2>Distribuir QRs de Asistencia</h2>
+        <p>Generá y enviá por correo los QRs personalizados a los alumnos inscriptos. <strong>El sistema asignará automáticamente la fecha actual y el tiempo de validez.</strong></p>
+
+        <form action="/asistencias/generar" method="POST">
+            <div class="form-group">
+                <label for="curso">Seleccionar Curso</label>
+                <select id="curso" name="curso_id" required style="padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+                    <option value="">-- Elegir cátedra --</option>
+                    <option value="1">75.40 - Algoritmos y Programación II</option>
+                    <option value="2">75.41 - Algoritmos y Programación III</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primario">Generar y Enviar QRs a Alumnos</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="/asistencias" style="color: #6c757d; text-decoration: none; font-size: 0.9rem;">← Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

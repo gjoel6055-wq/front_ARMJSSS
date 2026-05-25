@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Validando Asistencia - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card" style="text-align: center; max-width: 450px;">
+
+        <div id="estado-procesando">
+            <div style="font-size: 4rem; margin-bottom: 1rem;" class="spinner">⏳</div>
+            <h2 style="color: #004b87;">Validando tu asistencia...</h2>
+            <p style="color: #6c757d;">Esperá un momento mientras registramos tu presencialidad en el servidor de la facultad.</p>
+        </div>
+
+        <div id="estado-exito" style="display: none;">
+            <div style="font-size: 4rem; color: #28a745; margin-bottom: 1rem;">✅</div>
+            <h2 style="color: #28a745; margin-bottom: 0.5rem;">¡Presente Registrado!</h2>
+            <p style="color: #6c757d; margin-bottom: 2rem;">Tu asistencia ha sido validada correctamente en el sistema.</p>
+
+            <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: left; border-left: 4px solid #004b87; margin-bottom: 2rem;">
+                <p style="margin: 0 0 0.75rem 0;"><strong>Alumno:</strong> <span id="resumen-alumno">-</span></p>
+                <p style="margin: 0 0 0.75rem 0;"><strong>Curso:</strong> <span id="resumen-curso">-</span></p>
+                <p style="margin: 0;"><strong>Fecha y Hora:</strong> <span id="resumen-fecha">-</span></p>
+            </div>
+        </div>
+
+        <div id="estado-error" style="display: none;">
+            <div style="font-size: 4rem; color: #dc3545; margin-bottom: 1rem;">❌</div>
+            <h2 style="color: #dc3545; margin-bottom: 0.5rem;">Error de Validación</h2>
+            <p id="error-descripcion" style="color: #6c757d; margin-bottom: 2rem;">El código QR ha expirado o no corresponde a una clase válida el día de hoy.</p>
+        </div>
+
+        <a href="/" class="btn-primario" style="text-decoration: none; display: inline-block; margin-top: 1rem;">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}

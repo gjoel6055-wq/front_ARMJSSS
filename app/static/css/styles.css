@@ -157,15 +157,10 @@
     background-color: #003865;
 }
 
-/* ==========================================================================
-   PANTALLA DE INICIO (HOME / HERO)
-   ========================================================================== */
-
 .inicio-container {
     padding: 1rem 0;
 }
 
-/* Sección de Bienvenida Principal */
 .hero-section {
     text-align: center;
     padding: 4rem 2rem;
@@ -190,10 +185,10 @@
     line-height: 1.5;
 }
 
-/* Botón Grande de Acceso */
+
 .btn-principal-grande {
     display: inline-block;
-    background-color: #ffc107; /* Color amarillo/dorado de contraste */
+    background-color: #ffc107;
     color: #212529;
     text-decoration: none;
     padding: 1rem 2.5rem;
@@ -206,14 +201,13 @@
 
 .btn-principal-grande:hover {
     background-color: #e0a800;
-    transform: translateY(-2px); /* Pequeño efecto de elevación */
+    transform: translateY(-2px);
 }
 
 .btn-principal-grande:active {
     transform: translateY(0);
 }
 
-/* Grilla de Características */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -221,7 +215,6 @@
     margin-bottom: 2rem;
 }
 
-/* Tarjetas Informativas */
 .feature-card {
     background-color: #ffffff;
     padding: 2rem;
@@ -247,4 +240,66 @@
     color: #495057;
     font-size: 0.95rem;
     margin: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #212529;
+    line-height: 1.6;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    flex: 1;
+
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.pie-pagina {
+    background-color: #004b87;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin-top: auto;
+    border-top: 4px solid #002d54;
+}
+
+.pie-pagina p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.pie-pagina .licencia {
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+.btn-navbar-registro {
+
+    color: #212529;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.navbar ul li {
+    display: flex;
+    align-items: center;
 }
