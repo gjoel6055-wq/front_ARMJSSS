@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Historial de Logs - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>Auditoría del Sistema</h2>
+    <p>Registro de actividad, accesos y movimientos de los usuarios</p>
+</div>
+
+{% if error %}
+    <div class="alerta-error">
+        {{ error }}
+    </div>
+{% endif %}
+
+<div class="card-filtros">
+    <form action="{{ url_for('log.index') }}" method="GET" class="form-filters">
+
+        <div class="form-group grupo-filtro">
+            <label for="filtro_accion">Tipo de Acción</label>
+            <select id="filtro_accion" name="accion" class="select-filtro">
+                <option value="">Todas las acciones</option>
+                <option value="Inicio sesion" {% if accion_buscada == 'Inicio sesion' %}selected{% endif %}>Inicio de Sesión</option>
+                <option value="Login fallido" {% if accion_buscada == 'Login fallido' %}selected{% endif %}>Login Fallido</option>
+                <option value="Cerró sesion" {% if accion_buscada == 'Cerró sesion' %}selected{% endif %}>Cierre de Sesión</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primario btn-filtro">Filtrar</button>
+    </form>
+</div>
+
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>ID Log</th>
+                <th>Usuario ID</th>
+                <th>Acción</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.log_id }}</td>
+                <td class="td-usuario">
+                    {{ log.usuario_id if log.usuario_id else 'Anónimo' }}
+                </td>
+                <td>
+                    <span class="badge {% if log.accion == 'Inicio sesion' %}badge-verde{% elif log.accion == 'Login fallido' %}badge-rojo{% else %}badge-gris{% endif %}">
+                        {{ log.accion }}
+                    </span>
+                </td>
+                <td class="td-ip">{{ log.ip }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="td-mensaje-vacio">
+                    No se encontraron registros de auditoría para la búsqueda actual.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

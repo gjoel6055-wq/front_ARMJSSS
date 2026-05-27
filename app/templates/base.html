@@ -11,9 +11,9 @@
     <nav class="navbar">
         <a href="/" class="navbar-logo">Sistema FIUBA</a>
         <ul>
-        <li><a href="{{ url_for('auth.login') }}">Iniciar Sesión</a></li>
+        <li><a href="{{ url_for('auth.login') }}" class = "btn-navbar-login">Iniciar Sesión</a></li>
 
-        <li><a href="{{ url_for('auth.registro') }}" class="btn-navbar-registro">Crear Cuenta</a></li>
+        <li><a href="{{ url_for('auth.registro') }}" class="btn-navbar-login">Crear Cuenta</a></li>
         </ul>
     </nav>
 
@@ -27,6 +27,7 @@
             <p class="contenido-footer">2026 Sistema FIUBA - Gestión de Cursos.</p>
         </div>
     </footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>

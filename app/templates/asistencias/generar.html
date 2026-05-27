@@ -1,29 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Enviar QRs de Asistencia - Gestor FIUBA{% endblock %}
+{% block title %}Generar Asistencia - Gestor FIUBA{% endblock %}
 
 {% block content %}
-<div class="login-wrapper" style="min-height: auto; margin-top: 2rem;">
-    <div class="login-card" style="max-width: 550px;">
-        <h2>Distribuir QRs de Asistencia</h2>
-        <p>Generá y enviá por correo los QRs personalizados a los alumnos inscriptos. <strong>El sistema asignará automáticamente la fecha actual y el tiempo de validez.</strong></p>
+<div class="modulo-header asistencia-header">
+    <h2>Panel Docente: Generar Asistencia</h2>
+    <p>Creá el código de acceso para que tus alumnos den el presente hoy</p>
+</div>
 
-        <form action="/asistencias/generar" method="POST">
-            <div class="form-group">
-                <label for="curso">Seleccionar Curso</label>
-                <select id="curso" name="curso_id" required style="padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem; font-family: inherit;">
-                    <option value="">-- Elegir cátedra --</option>
-                    <option value="1">75.40 - Algoritmos y Programación II</option>
-                    <option value="2">75.41 - Algoritmos y Programación III</option>
-                </select>
+<div class="login-wrapper wrapper-mitad">
+    <div class="login-card">
+
+        {% if error %}
+            <div class="alerta-error">{{ error }}</div>
+        {% endif %}
+
+        {% if codigo_generado %}
+            <div class="tarjeta-centrada">
+                <h3 class="texto-exito">¡Clase generada con éxito!</h3>
+                <p>Compartí este código con tus alumnos:</p>
+
+                <div class="codigo-box">
+                    <h1 class="codigo-texto">{{ codigo_generado }}</h1>
+                </div>
+
+                <a href="{{ url_for('asistencias.index') }}" class="btn-primario btn-bloque">Volver al inicio</a>
             </div>
 
-            <button type="submit" class="btn-primario">Generar y Enviar QRs a Alumnos</button>
-        </form>
+        {% else %}
+            <form action="{{ url_for('asistencias.generar') }}" method="POST">
+                <div class="form-group">
+                    <label for="materia_id">Seleccionar Curso/Materia</label>
+                    <select id="materia_id" name="materia_id" class="select-filtro" required>
+                        <option value="" disabled selected>Elegí una materia...</option>
 
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="/asistencias" style="color: #6c757d; text-decoration: none; font-size: 0.9rem;">← Volver al listado</a>
-        </div>
+                        {% for materia in materias %}
+                            <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+                        {% else %}
+                            <option value="" disabled>No tenés materias asignadas</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primario">Generar Código de Clase</button>
+            </form>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

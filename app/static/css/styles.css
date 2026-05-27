@@ -1,22 +1,65 @@
 /* ==========================================================================
-   ESTILOS GENERALES
+   1. ESTILOS BASE Y RESET
+   Afecta a: Toda la página web (body y elementos generales)
    ========================================================================== */
-   body {
+body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* Gris muy claro de fondo */
+    background-color: #f8f9fa; /* Gris muy claro de fondo general */
     color: #212529; /* Gris oscuro para el texto principal */
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Para que el pie de página siempre quede abajo */
 }
 
-/* Base para asegurar que los paddings no rompan el ancho de los elementos */
+/* Reset básico de box-sizing para evitar desbordes de padding */
 * {
     box-sizing: border-box;
 }
 
 /* ==========================================================================
-   BARRA DE NAVEGACIÓN (NAVBAR)
+   2. ESTRUCTURA PRINCIPAL (LAYOUT)
+   Afecta a: El contenedor central (base.html) y el pie de página
+   ========================================================================== */
+
+/* Contenedor blanco central donde se inyectan las vistas */
+.container {
+    flex: 1; /* Permite que empuje al footer hacia abajo */
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+/* Pie de página (Footer en base.html) */
+.pie-pagina {
+    background-color: #004b87;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin-top: auto;
+    border-top: 4px solid #002d54;
+}
+
+.pie-pagina p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.pie-pagina .licencia {
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+
+
+/* ==========================================================================
+   3. BARRA DE NAVEGACIÓN (NAVBAR)
+   Afecta a: El menú superior en base.html
    ========================================================================== */
 .navbar {
     display: flex;
@@ -27,29 +70,35 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Enlaces generales de la navbar */
 .navbar a {
     color: #ffffff;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-/* Título o Logo del sistema */
+/* Título o Logo del sistema (Gestor FIUBA) */
 .navbar .navbar-brand {
     font-size: 1.25rem;
     font-weight: bold;
     letter-spacing: 0.5px;
 }
 
-/* Lista de enlaces a la derecha */
+/* Contenedor de la lista de botones */
 .navbar ul {
     list-style: none;
     display: flex;
     margin: 0;
     padding: 0;
-    gap: 1.5rem; /* Espaciado entre los elementos del menú */
+    gap: 1.5rem;
 }
 
+/* Elemento de lista en la navbar */
+.navbar ul li {
+    display: flex;
+    align-items: center;
+}
+
+/* Botones estándar de navegación */
 .navbar ul li a {
     font-size: 1rem;
     font-weight: 500;
@@ -57,44 +106,103 @@
     border-radius: 4px;
 }
 
-/* Efecto hover al pasar el mouse por encima */
 .navbar ul li a:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* ==========================================================================
-   CONTENEDOR PRINCIPAL (MAIN BODY)
-   ========================================================================== */
-.container {
-    max-width: 1200px;
-    margin: 2rem auto; /* Centra el contenedor y le da espacio arriba/abajo */
-    padding: 2rem;
-    background-color: #ffffff; /* Fondo blanco para las tarjetas de contenido */
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Estilo específico para el botón de Registro en la navbar */
+.btn-navbar-registro {
+    color: #212529;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.2s;
 }
 
+
 /* ==========================================================================
-   COMPONENTES DE FORMULARIO (LOGIN / REGISTRO)
+   4. COMPONENTES GLOBALES (BOTONES Y ALERTAS)
+   Afecta a: Elementos reusables en cualquier parte del sistema
    ========================================================================== */
 
-/* Centra la tarjeta de login en la pantalla */
+/* Botón principal (Usado en Login, Formularios, etc.) */
+.btn-primario {
+    width: 100%;
+    background-color: #004b87;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.btn-primario:hover {
+    background-color: #003865;
+}
+
+/* Botón gigante amarillo (Usado en la pantalla de inicio principal) */
+.btn-principal-grande {
+    display: inline-block;
+    background-color: #ffc107;
+    color: #212529;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.15rem;
+    font-weight: bold;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-principal-grande:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+}
+
+.btn-principal-grande:active {
+    transform: translateY(0);
+}
+
+/* Alerta de Error Jinja (La caja roja de mensajes de fallo) */
+.alerta-error {
+    color: #dc3545;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+    background-color: #f8d7da;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+
+/* ==========================================================================
+   5. MÓDULO DE AUTENTICACIÓN (LOGIN / REGISTRO)
+   Afecta a: auth/login.html y auth/registro.html
+   ========================================================================== */
+
+/* Contenedor que centra vertical y horizontalmente la tarjeta de login */
 .login-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 60vh; /* Ocupa al menos el 60% del alto de la pantalla */
+    min-height: 80vh;
 }
 
-/* Diseño de la tarjeta blanca */
+/* La tarjeta blanca del formulario */
 .login-card {
     background-color: #ffffff;
     padding: 2.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px; /* Evita que el form sea gigante en pantallas grandes */
-    border-top: 4px solid #004b87; /* Detalle de color institucional */
+    max-width: 400px;
+    border-top: 4px solid #004b87;
 }
 
 .login-card h2 {
@@ -109,7 +217,7 @@
     font-size: 0.9rem;
 }
 
-/* Estilos de los campos de entrada */
+/* Estructura de cada campo (label + input) */
 .form-group {
     margin-bottom: 1.5rem;
     display: flex;
@@ -131,36 +239,40 @@
     transition: border-color 0.2s;
 }
 
-/* Efecto al hacer clic en el input */
 .form-group input:focus {
     outline: none;
     border-color: #004b87;
     box-shadow: 0 0 0 3px rgba(0, 75, 135, 0.1);
 }
 
-/* Botón principal */
-.btn-primario {
-    width: 100%;
-    background-color: #004b87;
-    color: white;
-    border: none;
-    padding: 0.75rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 1rem;
+/* Pie del formulario (Links de registro/login) */
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
 }
 
-.btn-primario:hover {
-    background-color: #003865;
+.auth-link {
+    color: #004b87;
+    font-weight: bold;
+    text-decoration: none;
 }
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================================================
+   6. PANTALLA DE INICIO PRINCIPAL (LANDING PAGE)
+   Afecta a: inicio.html (o index.html)
+   ========================================================================== */
 
 .inicio-container {
     padding: 1rem 0;
 }
 
+/* Banner superior con gradiente azul */
 .hero-section {
     text-align: center;
     padding: 4rem 2rem;
@@ -185,29 +297,7 @@
     line-height: 1.5;
 }
 
-
-.btn-principal-grande {
-    display: inline-block;
-    background-color: #ffc107;
-    color: #212529;
-    text-decoration: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.15rem;
-    font-weight: bold;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.btn-principal-grande:hover {
-    background-color: #e0a800;
-    transform: translateY(-2px);
-}
-
-.btn-principal-grande:active {
-    transform: translateY(0);
-}
-
+/* Grilla de características informativas */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -215,6 +305,7 @@
     margin-bottom: 2rem;
 }
 
+/* Cada tarjeta blanca dentro de la grilla */
 .feature-card {
     background-color: #ffffff;
     padding: 2rem;
@@ -242,64 +333,198 @@
     margin: 0;
 }
 
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-    color: #212529;
-    line-height: 1.6;
 
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+/* ==========================================================================
+   7. MÓDULO DE TABLAS Y AUDITORÍA (LOGS)
+   Afecta a: log/lista.html y cualquier vista que renderice tablas
+   ========================================================================== */
+
+/* Cabeceras de títulos antes de las tablas */
+.modulo-header {
+    margin-bottom: 2rem;
 }
 
-* {
+.modulo-header h2 {
+    color: #004b87;
+    margin: 0;
+}
+
+.modulo-header p {
+    color: #6c757d;
+    margin: 0.5rem 0 0 0;
+}
+
+/* Contenedor para evitar que la tabla rompa el ancho en celulares */
+.tabla-responsive {
+    overflow-x: auto;
+}
+
+/* Estilo principal de las tablas de datos */
+.tabla-auditoria {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tabla-auditoria th {
+    background-color: #343a40;
+    color: white;
+    text-align: left;
+    padding: 1rem;
+}
+
+.tabla-auditoria td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+/* Clases específicas para celdas de la tabla de logs */
+.td-usuario { font-weight: 600; }
+.td-detalle { color: #6c757d; }
+.td-ip { font-family: monospace; }
+.td-mensaje-vacio { text-align: center; padding: 2rem; color: #6c757d; }
+.td-mensaje-error { text-align: center; padding: 2rem; color: #dc3545; font-weight: 600; }
+
+/* Etiquetas visuales (Badges) usadas dentro de las tablas */
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-gris { background-color: #e2e3e5; color: #383d41; }
+.badge-verde { background-color: #d4edda; color: #155724; }
+.badge-azul { background-color: #cce5ff; color: #004085; }
+.badge-rojo { background-color: #f8d7da; color: #721c24; }
+
+
+/* ==========================================================================
+   8. FORMULARIOS DE FILTROS (BÚSQUEDA)
+   Afecta a: La barra de filtros encima de la tabla en log/lista.html
+   ========================================================================== */
+
+/* Tarjeta contenedora de los campos de búsqueda */
+.card-filtros {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 100%;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-top: 3px solid #004b87;
+}
+
+/* Alineación horizontal de los campos */
+.form-filtros {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.grupo-filtro {
+    margin: 0;
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Campos de selección desplegables */
+.select-filtro {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    width: 100%;
     box-sizing: border-box;
 }
 
-.container {
-    flex: 1;
-
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    width: 100%;
+/* Botón de filtrar dentro del formulario */
+.btn-filtro {
+    width: auto;
+    margin: 0;
+    padding: 0.75rem 1.5rem;
 }
 
-.pie-pagina {
-    background-color: #004b87;
-    color: #ffffff;
+/* ==========================================================================
+   9. MÓDULO DE ASISTENCIAS
+   Afecta a: asistencias/generar.html y asistencias/validar.html
+   ========================================================================== */
+
+/* Cabecera y contenedores */
+.asistencia-header {
     text-align: center;
-    padding: 1.5rem 1rem;
-    margin-top: auto;
-    border-top: 4px solid #002d54;
+    margin-top: 2rem;
 }
 
-.pie-pagina p {
-    margin: 0.25rem 0;
-    font-size: 0.95rem;
+.wrapper-mitad {
+    min-height: 50vh;
 }
 
-.pie-pagina .licencia {
-    font-size: 0.85rem;
-    color: #adb5bd;
+.tarjeta-centrada {
+    text-align: center;
 }
-.btn-navbar-registro {
 
-    color: #212529;
-    padding: 0.5rem 1rem;
+/* Mensajes y estados */
+.texto-exito {
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.alerta-exito {
+    color: #155724;
+    background-color: #d4edda;
+    padding: 1rem;
     border-radius: 4px;
     font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.2s;
+    margin-bottom: 1.5rem;
 }
 
-.navbar ul li {
-    display: flex;
-    align-items: center;
+/* Caja donde se muestra el código QR / Código alfanumérico */
+.codigo-box {
+    background-color: #f8f9fa;
+    border: 2px dashed #004b87;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.codigo-texto {
+    font-size: 3rem;
+    color: #004b87;
+    margin: 0;
+    letter-spacing: 5px;
+}
+
+/* Botones y elementos secundarios */
+.btn-bloque {
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.btn-verde {
+    background-color: #28a745;
+}
+
+.btn-verde:hover {
+    background-color: #218838;
+}
+
+/* Recuadro de información del usuario al dar el presente */
+.info-usuario {
+    background-color: #e2e3e5;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.info-usuario-texto {
+    font-size: 0.9rem;
+    color: #383d41;
 }
