@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Cursos - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>Cursos</h2>
+    <p>Listado de todos los cursos activos del sistema.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+    <a href="{{ url_for('cursos.crear') }}" class="btn-primario" style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
+        + Nuevo Curso
+    </a>
+</div>
+
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cuatrimestre</th>
+                <th>Año</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if cursos %}
+                {% for curso in cursos %}
+                <tr>
+                    <td>{{ curso.curso_id }}</td>
+                    <td><strong>{{ curso.nombre }}</strong></td>
+                    <td>
+                        <span class="badge badge-azul">{{ curso.cuatrimestre }}</span>
+                    </td>
+                    <td>{{ curso.anio }}</td>
+                    <td class="td-detalle">{{ curso.descripcion or '—' }}</td>
+                    <td>
+                        <a href="{{ url_for('cursos.detalle', curso_id=curso.curso_id) }}" class="badge badge-azul" style="text-decoration: none; margin-right: 4px;">Ver</a>
+                        <a href="{{ url_for('cursos.editar', curso_id=curso.curso_id) }}" class="badge badge-gris" style="text-decoration: none; margin-right: 4px;">Editar</a>
+                        <form method="POST" action="{{ url_for('cursos.eliminar', curso_id=curso.curso_id) }}" style="display: inline;" onsubmit="return confirm('¿Eliminar el curso {{ curso.nombre }}?')">
+                            <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="td-mensaje-vacio">No hay cursos registrados.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

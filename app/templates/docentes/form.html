@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if accion == 'editar' else 'Nuevo' }} Docente - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>{{ 'Editar Docente' if accion == 'editar' else 'Nuevo Docente' }}</h2>
+    <p>
+        {% if accion == 'editar' %}
+            Modificá los datos del docente. El email no puede cambiarse desde aquí.
+        {% else %}
+            Completá los datos para registrar un nuevo docente. Se creará su cuenta de usuario automáticamente.
+        {% endif %}
+    </p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div class="card-filtros" style="max-width: 600px;">
+    <form method="POST">
+
+        {% if accion == 'crear' %}
+        <p style="font-weight: 700; color: #004b87; margin: 0 0 1rem 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            Datos de acceso
+        </p>
+
+        <div class="form-group">
+            <label for="email">Email institucional *</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="docente@fi.uba.ar"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña *</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Mínimo 8 caracteres"
+                required
+            >
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #dee2e6; margin: 1.5rem 0;">
+        <p style="font-weight: 700; color: #004b87; margin: 0 0 1rem 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            Datos personales
+        </p>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="nombre">Nombre *</label>
+            <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                placeholder="Ej: Juan"
+                value="{{ docente.nombre if docente else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="apellido">Apellido *</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                placeholder="Ej: García"
+                value="{{ docente.apellido if docente else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="departamento">Departamento</label>
+            <input
+                type="text"
+                id="departamento"
+                name="departamento"
+                placeholder="Ej: Computación"
+                value="{{ docente.departamento if docente and docente.departamento else '' }}"
+            >
+        </div>
+
+        {% if accion == 'editar' %}
+        <p style="font-size: 0.85rem; color: #6c757d; margin-top: 0.5rem;">
+            Email: <strong>{{ docente.email }}</strong> · Legajo: <strong>{{ docente.legajo }}</strong>
+        </p>
+        {% endif %}
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <button type="submit" class="btn-primario" style="width: auto; padding: 0.6rem 1.5rem; margin: 0;">
+                {{ 'Guardar cambios' if accion == 'editar' else 'Crear Docente' }}
+            </button>
+            <a href="{{ url_for('docentes.lista') }}" class="btn-primario" style="width: auto; padding: 0.6rem 1.5rem; margin: 0; background-color: #6c757d; text-decoration: none; display: inline-block; text-align: center;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Docentes - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>Docentes</h2>
+    <p>Listado de todos los docentes registrados en el sistema.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+    <a href="{{ url_for('docentes.crear') }}" class="btn-primario" style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
+        + Nuevo Docente
+    </a>
+</div>
+
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>Legajo</th>
+                <th>Nombre y Apellido</th>
+                <th>Email</th>
+                <th>Departamento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if docentes %}
+                {% for docente in docentes %}
+                <tr>
+                    <td class="td-ip">{{ docente.legajo }}</td>
+                    <td><strong>{{ docente.apellido }}, {{ docente.nombre }}</strong></td>
+                    <td class="td-detalle">{{ docente.email }}</td>
+                    <td>
+                        {% if docente.departamento %}
+                            <span class="badge badge-gris">{{ docente.departamento }}</span>
+                        {% else %}
+                            <span style="color: #6c757d;">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('docentes.editar', legajo=docente.legajo) }}" class="badge badge-gris" style="text-decoration: none; margin-right: 4px;">Editar</a>
+                        <form method="POST" action="{{ url_for('docentes.eliminar', legajo=docente.legajo) }}" style="display: inline;" onsubmit="return confirm('¿Eliminar al docente {{ docente.apellido }}, {{ docente.nombre }}?')">
+                            <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="td-mensaje-vacio">No hay docentes registrados.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
