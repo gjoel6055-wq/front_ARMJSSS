@@ -248,3 +248,360 @@
     font-size: 0.95rem;
     margin: 0;
 }
+
+/* ==========================================================================
+   MÓDULO: CURSOS
+   Afecta a: cursos/lista.html, cursos/detalle.html, cursos/form.html
+   ========================================================================== */
+
+.modulo-header {
+    margin-bottom: 2rem;
+}
+
+.modulo-header h2 {
+    color: #004b87;
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.modulo-header p {
+    color: #6c757d;
+    margin: 0.4rem 0 0 0;
+    font-size: 0.95rem;
+}
+
+/* Tabla de datos reutilizable en lista de cursos, docentes y equipos */
+.tabla-responsive {
+    overflow-x: auto;
+}
+
+.tabla-auditoria {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.tabla-auditoria th {
+    background-color: #004b87;
+    color: #ffffff;
+    text-align: left;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.tabla-auditoria td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.tabla-auditoria tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla-auditoria tbody tr:hover {
+    background-color: #f1f5fb;
+}
+
+/* Celdas con estilos específicos */
+.td-detalle  { color: #6c757d; font-size: 0.9rem; }
+.td-ip       { font-family: monospace; font-size: 0.9rem; }
+.td-usuario  { font-weight: 600; }
+
+.td-mensaje-vacio {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.td-mensaje-error {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Badges de estado reutilizables */
+.badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.badge-gris  { background-color: #e9ecef; color: #495057; }
+.badge-azul  { background-color: #cce5ff; color: #004085; }
+.badge-verde { background-color: #d4edda; color: #155724; }
+.badge-rojo  { background-color: #f8d7da; color: #721c24; }
+
+/* Tarjeta de información (usada en detalle de curso y equipo) */
+.card-info {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    border-top: 3px solid #004b87;
+}
+
+.card-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-info-campo p:first-child {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-info-campo p:last-child {
+    margin: 0.3rem 0 0 0;
+    font-size: 1rem;
+    color: #212529;
+}
+
+.card-info-divider {
+    border: none;
+    border-top: 1px solid #dee2e6;
+    margin: 1.5rem 0;
+}
+
+/* Grupo de botones de acción */
+.acciones-grupo {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.btn-secundario {
+    display: inline-block;
+    background-color: #6c757d;
+    color: #ffffff;
+    border: none;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+.btn-secundario:hover {
+    background-color: #5a6268;
+}
+
+.btn-peligro {
+    display: inline-block;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+.btn-peligro:hover {
+    background-color: #c82333;
+}
+
+/* Botón de acción pequeño para usar dentro de celdas de tabla */
+.btn-tabla {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    line-height: 1.6;
+    transition: opacity 0.15s;
+}
+
+.btn-tabla:hover {
+    opacity: 0.8;
+}
+
+
+/* ==========================================================================
+   MÓDULO: DOCENTES
+   Afecta a: docentes/lista.html, docentes/form.html
+   ========================================================================== */
+
+/* Formulario de alta de docente — separador de secciones */
+.form-seccion-titulo {
+    font-weight: 700;
+    color: #004b87;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 1rem 0;
+}
+
+.form-seccion-divider {
+    border: none;
+    border-top: 1px solid #dee2e6;
+    margin: 1.5rem 0;
+}
+
+/* Texto de metadata debajo del form en edición */
+.form-metadata {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+
+/* ==========================================================================
+   MÓDULO: EQUIPOS
+   Afecta a: equipos/lista.html, equipos/detalle.html, equipos/form.html
+   ========================================================================== */
+
+/* Filtro de cursos en lista de equipos */
+.card-filtros {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-top: 3px solid #004b87;
+}
+
+.form-filtros {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.grupo-filtro {
+    flex: 1;
+    min-width: 180px;
+}
+
+.grupo-filtro label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
+.select-filtro {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #fff;
+    color: #212529;
+    transition: border-color 0.2s;
+}
+
+.select-filtro:focus {
+    outline: none;
+    border-color: #004b87;
+    box-shadow: 0 0 0 3px rgba(0, 75, 135, 0.1);
+}
+
+.btn-filtro {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.95rem;
+    width: auto;
+    margin: 0;
+}
+
+/* Layout del detalle de equipo: tabla + mini-form lateral */
+.equipo-detalle-seccion {
+    margin-top: 2.5rem;
+}
+
+.equipo-detalle-seccion h3 {
+    color: #004b87;
+    font-size: 1.15rem;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.equipo-detalle-grid {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.equipo-detalle-tabla {
+    flex: 1;
+    min-width: 280px;
+}
+
+/* Mini formulario lateral para agregar alumno/evaluación */
+.equipo-mini-form {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.25rem;
+    border-top: 3px solid #004b87;
+    min-width: 210px;
+    max-width: 260px;
+}
+
+.equipo-mini-form p {
+    font-weight: 700;
+    color: #004b87;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 1rem 0;
+}
+
+.equipo-mini-form input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+}
+
+.equipo-mini-form input:focus {
+    outline: none;
+    border-color: #004b87;
+    box-shadow: 0 0 0 3px rgba(0, 75, 135, 0.1);
+}
+
+.equipo-mini-form label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #495057;
+}
+
+.equipo-mini-form .btn-primario {
+    margin: 0;
+    padding: 0.55rem;
+    font-size: 0.9rem;
+}
