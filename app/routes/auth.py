@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from services.auth_service import hacer_login, hacer_logout
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from services.auth_service import hacer_login, hacer_logout, registrar_nuevo_usuario
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -20,17 +20,33 @@ def login():
             session['usuario_rol'] = datos_login['datos']['rol']
 
             if datos_login['datos']['rol'] == 'alumno':
-                return redirect(url_for('alumnos'))
+                return redirect(url_for('index'))
 
             if datos_login['datos']['rol'] == 'docente':
-                return redirect(url_for('docentes'))
+                return redirect(url_for('index'))
 
         else:
             return render_template('auth/login.html', error=resultado['error'])
 
     return render_template('auth/login.html')
-@auth_bp.route('/registro')
+@auth_bp.route('/registro', methods=['POST', 'GET'])
 def registro():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        password = request.form.get('password')
+        padron = request.form.get('padron')
+
+        resultado = registrar_nuevo_usuario(nombre, apellido, password, email, padron)
+
+        if resultado['exito'] == True:
+            flash(f"¡Bienvenido de nuevo, {resultado['datos']['nombre']}!", "success")
+            return render_template('auth/login.html', error="¡Cuenta creada con éxito! Iniciá sesión para continuar.")
+
+        else:
+            return render_template('auth/registro.html', error=resultado['error'])
+
     return render_template('auth/registro.html')
 
 @auth_bp.route('/logout')
@@ -41,4 +57,5 @@ def logout():
         hacer_logout(token_actual)
 
     session.clear()
+    flash("Has cerrado sesión correctamente. ¡Hasta pronto!", "info")
     return redirect(url_for('index'))

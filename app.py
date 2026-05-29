@@ -5,6 +5,8 @@ from routes.asistencias import asistencias_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
+app.secret_key = 'una_clave_super_secreta_para_fiuba_2026'
+
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(log_bp, url_prefix='/log')
 app.register_blueprint(asistencias_bp, url_prefix='/asistencias')

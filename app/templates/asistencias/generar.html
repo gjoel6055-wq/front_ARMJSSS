@@ -1,52 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Generar Asistencia - Gestor FIUBA{% endblock %}
-
 {% block content %}
-<div class="modulo-header asistencia-header">
-    <h2>Panel Docente: Generar Asistencia</h2>
-    <p>Creá el código de acceso para que tus alumnos den el presente hoy</p>
+<div class="modulo-header">
+    <h2>Control de Asistencia</h2>
+    <p>Iniciá la clase para enviar los QRs a todos los alumnos.</p>
 </div>
 
 <div class="login-wrapper wrapper-mitad">
     <div class="login-card">
-
-        {% if error %}
-            <div class="alerta-error">{{ error }}</div>
-        {% endif %}
-
-        {% if codigo_generado %}
-            <div class="tarjeta-centrada">
-                <h3 class="texto-exito">¡Clase generada con éxito!</h3>
-                <p>Compartí este código con tus alumnos:</p>
-
-                <div class="codigo-box">
-                    <h1 class="codigo-texto">{{ codigo_generado }}</h1>
-                </div>
-
-                <a href="{{ url_for('asistencias.index') }}" class="btn-primario btn-bloque">Volver al inicio</a>
-            </div>
-
-        {% else %}
-            <form action="{{ url_for('asistencias.generar') }}" method="POST">
-                <div class="form-group">
-                    <label for="materia_id">Seleccionar Curso/Materia</label>
-                    <select id="materia_id" name="materia_id" class="select-filtro" required>
-                        <option value="" disabled selected>Elegí una materia...</option>
-
-                        {% for materia in materias %}
-                            <option value="{{ materia.id }}">{{ materia.nombre }}</option>
-                        {% else %}
-                            <option value="" disabled>No tenés materias asignadas</option>
-                        {% endfor %}
-
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-primario">Generar Código de Clase</button>
-            </form>
-        {% endif %}
-
+        <form action="{{ url_for('asistencia.enviar_qrs_accion') }}" method="POST">
+            <button type="submit" class="btn-primario btn-bloque"
+                    onclick="this.innerText='Enviando mails...'; this.disabled=true; this.form.submit();">
+                Iniciar Clase y Enviar QRs
+            </button>
+        </form>
     </div>
 </div>
 {% endblock %}

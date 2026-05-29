@@ -24,6 +24,18 @@
                 <option value="Inicio sesion" {% if accion_buscada == 'Inicio sesion' %}selected{% endif %}>Inicio de Sesión</option>
                 <option value="Login fallido" {% if accion_buscada == 'Login fallido' %}selected{% endif %}>Login Fallido</option>
                 <option value="Cerró sesion" {% if accion_buscada == 'Cerró sesion' %}selected{% endif %}>Cierre de Sesión</option>
+                <option value="Creó un nuevo equipo" {% if accion_buscada == 'Creó un nuevo equipo' %}selected{% endif %}>Creó un nuevo equipo</option>
+                <option value="Actualizó por completo el equipo" {% if accion_buscada == 'Actualizó por completo el equipo' %}selected{% endif %}>Modificaron un equipo completo</option>
+                <option value="Eliminó un equipo" {% if accion_buscada == 'Eliminó un equipo' %}selected{% endif %}>Eliminó un equipo</option>
+                <option value="Registró a un docente" {% if accion_buscada == 'Registró a un docente' %}selected{% endif %}>Registró a un docente</option>
+                <option value="Dió de baja al docente" {% if accion_buscada == 'Dió de baja al docente' %}selected{% endif %}>Dió de baja al docente</option>
+                <option value="Creó un curso nuevo" {% if accion_buscada == 'Creó un curso nuevo' %}selected{% endif %}>Creó un curso nuevo</option>
+                <option value="Actualizó completamente el curso" {% if accion_buscada == 'Actualizó completamente el curso' %}selected{% endif %}>Actualizó completamente el curso</option>
+                <option value="Modificó un curso" {% if accion_buscada == 'Modificó un curso' %}selected{% endif %}>Modificó un curso</option>
+                <option value="Eliminó un curso" {% if accion_buscada == 'Eliminó un curso' %}selected{% endif %}>Eliminó un curso</option>
+                <option value="Registró un nuevo alumno" {% if accion_buscada == 'Registró un nuevo alumno' %}selected{% endif %}>Registró un nuevo alumno</option>
+                <option value="Actualizó los datos del alumno" {% if accion_buscada == 'Actualizó los datos del alumno' %}selected{% endif %}>Actualizó los datos del alumno</option>
+                <option value="Eliminó a un alumno" {% if accion_buscada == 'Eliminó a un alumno' %}selected{% endif %}>Eliminó a un alumno</option>
             </select>
         </div>
 
@@ -38,6 +50,7 @@
                 <th>ID Log</th>
                 <th>Usuario ID</th>
                 <th>Acción</th>
+                <th>Fecha</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -53,11 +66,12 @@
                         {{ log.accion }}
                     </span>
                 </td>
+                <td>{{ log.fecha_actividad }}</td>
                 <td class="td-ip">{{ log.ip }}</td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" class="td-mensaje-vacio">
+                <td colspan="5" class="td-mensaje-vacio">
                     No se encontraron registros de auditoría para la búsqueda actual.
                 </td>
             </tr>

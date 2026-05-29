@@ -1,65 +1,63 @@
 {% extends "base.html" %}
 
-{% block title %}Alumnos - Control de Asistencias - Gestor FIUBA{% endblock %}
+{% block title %}Asistencias Diarias - Gestor FIUBA{% endblock %}
 
 {% block content %}
-<div class="modulo-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <div>
-        <h2 style="color: #004b87; margin: 0;">Asistencia de Alumnos</h2>
-        <p style="color: #6c757d; margin: 0.5rem 0 0 0;">Listado de estudiantes inscriptos y resumen de presencialidad</p>
+<div class="header-acciones">
+    <div class="header-titulos">
+        <h2>Control de Asistencia Diaria</h2>
+        <p>Listado de alumnos y su estado para la clase seleccionada</p>
     </div>
-    <a href="/asistencias/generar" class="btn-primario" style="text-decoration: none; width: auto; padding: 0.75rem 1.5rem; margin: 0;">
+
+    <form action="{{ url_for('asistencia.generar') }}" method="POST" class="form-enlinea">
+    <button type="submit" class="btn-primario btn-exito btn-auto">
         Enviar QRs del Día
-    </a>
+    </button>
+</form>
 </div>
 
-<div class="login-card" style="max-width: 100%; margin-bottom: 2rem; padding: 1.5rem; border-top: 3px solid #004b87;">
-    <form method="GET" action="/asistencias" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-        <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
-            <label for="buscar_alumno">Buscar por Padrón o Nombre</label>
-            <input type="text" id="buscar_alumno" name="q" placeholder="Ej: 102345 o Apellido">
+<div class="card-filtros">
+    <form method="GET" action="{{ url_for('asistencia.fecha_clase') }}" class="form-filtros-flex">
+        <div class="form-group form-group-flex">
+            <label for="filtro_fecha">Seleccionar Fecha de Clase:</label>
+            <input type="date" id="filtro_fecha" name="fecha" value="{{ fecha_actual }}" class="select-filtro">
         </div>
-        <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
-            <label for="filtro_curso">Filtrar por Curso</label>
-            <select id="filtro_curso" name="curso_id" style="padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem; font-family: inherit;">
-                <option value="">Todos los cursos</option>
-                <option value="1">75.40 - Algoritmos y Programación II</option>
-                <option value="2">75.42 - Introducción al Desarrollo de Software</option>
-            </select>
-        </div>
-        <button type="submit" class="btn-primario" style="width: auto; margin: 0; padding: 0.75rem 1.5rem;">Filtrar</button>
+        <button type="submit" class="btn-primario btn-auto">Ver Asistencias</button>
+
+        <a href="{{ url_for('asistencia.fecha_clase') }}" class="btn-primario btn-secundario btn-auto texto-centrado">Ir a Hoy</a>
     </form>
 </div>
 
-<div style="overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
         <thead>
-            <tr style="background-color: #004b87; color: white; text-align: left;">
-                <th style="padding: 1rem;">Padrón</th>
-                <th style="padding: 1rem;">Alumno</th>
-                <th style="padding: 1rem;">Curso</th>
-                <th style="padding: 1rem; text-align: center;">Clases Asistidas</th>
-                <th style="padding: 1rem; text-align: center;">Porcentaje</th>
-                <th style="padding: 1rem; text-align: center;">Condición</th>
+            <tr>
+                <th>Padrón</th>
+                <th>Alumno</th>
+                <th>Email</th>
+                <th class="texto-centrado">Estado</th>
             </tr>
         </thead>
         <tbody>
-            <tr style="border-bottom: 1px solid #dee2e6;">
-                <td style="padding: 1rem; font-weight: 600;">102345</td>
-                <td style="padding: 1rem;">Joel Galindo</td>
-                <td style="padding: 1rem;">75.42 - Introducción al Desarrollo de Software</td>
-                <td style="padding: 1rem; text-align: center;">12 / 14</td>
-                <td style="padding: 1rem; text-align: center; font-weight: 600; color: #28a745;">85%</td>
-                <td style="padding: 1rem; text-align: center;"><span style="background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">Regular</span></td>
+            {% for alumno in alumnos %}
+            <tr>
+                <td class="td-usuario">{{ alumno.padron }}</td>
+                <td> {{ alumno.apellido }} {{ alumno.nombre }}</td>
+                <td class="td-detalle">{{ alumno.email }}</td>
+
+                <td class="texto-centrado">
+                    {% if alumno.presente == 1 %}
+                        <span class="badge badge-verde">Presente</span>
+                    {% else %}
+                        <span class="badge badge-gris">Ausente</span>
+                    {% endif %}
+                </td>
             </tr>
-            <tr style="border-bottom: 1px solid #dee2e6;">
-                <td style="padding: 1rem; font-weight: 600;">105678</td>
-                <td style="padding: 1rem;">Juan Pérez</td>
-                <td style="padding: 1rem;">75.40 - Algoritmos y Programación II</td>
-                <td style="padding: 1rem; text-align: center;">8 / 14</td>
-                <td style="padding: 1rem; text-align: center; font-weight: 600; color: #dc3545;">57%</td>
-                <td style="padding: 1rem; text-align: center;"><span style="background-color: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">Libre</span></td>
+            {% else %}
+            <tr>
+                <td colspan="4" class="td-mensaje-vacio">No hay alumnos registrados en el curso.</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
