@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Planificación de Evaluaciones - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="header-acciones">
+    <div class="header-titulos">
+        <h2>Planificación de Evaluaciones</h2>
+        <p>Cronograma de exámenes, trabajos prácticos y entregas del curso</p>
+    </div>
+
+    <a href="{{ url_for('evaluaciones.listar_evaluaciones') }}" class="btn-primario btn-exito btn-auto text-decoration-none">
+        + Nueva Evaluación
+    </a>
+</div>
+
+<div class="tabla-responsive" style="margin-top: 20px;">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>Nombre de la Evaluación</th>
+                <th>Tipo</th>
+                <th>Fecha de Entrega/Examen</th>
+                <th class="texto-centrado">Peso / Ponderación</th>
+                <th class="texto-centrado">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluacion in evaluaciones %}
+            <tr>
+                <td style="font-weight: 500;">{{ evaluacion.nombre }}</td>
+                <td class="td-detalle">{{ evaluacion.tipo }}</td>
+                <td>{{ evaluacion.fecha }}</td>
+                <td class="texto-centrado">
+                    <span class="badge badge-gris" style="background-color: #34495e; color: white;">
+                        {{ evaluacion.peso }}%
+                    </span>
+                </td>
+                <td class="texto-centrado">
+                    <a href="{{ url_for('evaluaciones.ver_detalle', id=evaluacion.id) }}" class="btn-primario btn-auto" style="padding: 4px 12px; font-size: 0.85rem; background-color: #3498db;">
+                        Ver Detalle
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="td-mensaje-vacio">No hay evaluaciones planificadas para este curso todavía.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

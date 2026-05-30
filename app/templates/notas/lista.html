@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Notas - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="header-acciones">
+    <div class="header-titulos">
+        <h2>Listado de Calificaciones</h2>
+        <p>Notas de los alumnos para la evaluación seleccionada</p>
+    </div>
+
+    <a href="{{ url_for('notas.listar_notas') }}" class="btn-primario btn-exito btn-auto text-decoration-none">
+        + Registrar Nueva Nota
+    </a>
+</div>
+
+<div class="card-filtros">
+    <form method="GET" action="{{ url_for('notas.listar_notas') }}" class="form-filtros-flex">
+        <div class="form-group form-group-flex">
+            <label for="filtro_evaluacion">Seleccionar Evaluación:</label>
+            <select id="filtro_evaluacion" name="evaluacion_id" class="select-filtro" onchange="this.form.submit()">
+                <option value="">-- Seleccionar Evaluación --</option>
+                {% for evap in evaluaciones_filtro %}
+                    <option value="{{ evap.id }}" {% if evap.id == evaluacion_seleccionada %}selected{% endif %}>
+                        {{ evap.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-primario btn-auto">Filtrar</button>
+    </form>
+</div>
+
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>Padrón</th>
+                <th>Alumno</th>
+                <th class="texto-centrado">Nota</th>
+                <th>Observación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in notas_alumnos %}
+            <tr>
+                <td class="td-usuario">{{ registro.padron }}</td>
+                <td>{{ registro.apellido }} {{ registro.nombre }}</td>
+                
+                <td class="texto-centrado">
+                    {% if registro.nota >= 4.0 %}
+                        <span class="badge badge-verde" style="font-weight: bold; min-width: 40px;">{{ registro.nota }}</span>
+                    {% else %}
+                        <span class="badge badge-gris" style="font-weight: bold; min-width: 40px; background-color: #e74c3c; color: white;">{{ registro.nota }}</span>
+                    {% endif %}
+                </td>
+                
+                <td class="td-detalle">{{ registro.observacion if registro.observacion else '-' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="td-mensaje-vacio">No hay notas registradas para esta evaluación o selecciona una del filtro.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

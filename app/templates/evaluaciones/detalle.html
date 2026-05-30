@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Evaluación - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="header-acciones">
+    <div class="header-titulos">
+        <h2>Detalle Académico: {{ evaluacion.nombre }}</h2>
+        <p>Información completa sobre la instancia de evaluación</p>
+    </div>
+    
+    <a href="{{ url_for('evaluaciones.listar_evaluaciones') }}" class="btn-primario btn-secundario btn-auto text-decoration-none">
+        ← Volver al Listado
+    </a>
+</div>
+
+<div class="card-filtros" style="display: block; padding: 25px; margin-top: 20px;">
+    <div style="margin-bottom: 20px;">
+        <h3 style="margin: 0 0 5px 0; color: #2c3e50;">Descripción de la Instancia</h3>
+        <p style="color: #555; line-height: 1.6; background: #fff; padding: 15px; border-left: 4px solid #3498db; border-radius: 4px;">
+            {{ evaluacion.descripcion if evaluacion.descripcion else 'No se especificó ninguna descripción o temario para esta evaluación.' }}
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 10px;">
+        <div style="background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <strong style="color: #7f8c8d; display: block; margin-bottom: 5px; font-size: 0.9rem;">Tipo de Evaluación</strong>
+            <span style="font-size: 1.1rem; font-weight: 500; color: #2c3e50;">{{ evaluacion.tipo }}</span>
+        </div>
+        
+        <div style="background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <strong style="color: #7f8c8d; display: block; margin-bottom: 5px; font-size: 0.9rem;">Fecha Programada</strong>
+            <span style="font-size: 1.1rem; font-weight: 500; color: #2c3e50;">{{ evaluacion.fecha }}</span>
+        </div>
+        
+        <div style="background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <strong style="color: #7f8c8d; display: block; margin-bottom: 5px; font-size: 0.9rem;">Peso sobre la Nota Final</strong>
+            <span class="badge badge-verde" style="font-size: 1rem; padding: 4px 10px;">{{ evaluacion.peso }}%</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

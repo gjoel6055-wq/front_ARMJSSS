@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Evaluación - Gestor Universitario FIUBA{% endblock %}
+
+{% block content %}
+<div class="inicio-container" style="display: flex; justify-content: center; padding: 40px 20px;">
+    
+    <div class="feature-card" style="max-width: 550px; width: 100%; text-align: left; padding: 30px;">
+        <div class="feature-icon">📝</div>
+        <h3 style="color: #004b87; margin-bottom: 10px; font-weight: bold; text-align: center;">Planificar Nueva Evaluación</h3>
+        <p class="subtitulo" style="font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 25px;">
+            Creá instancias de exámenes, parciales o trabajos prácticos para los cursos vigentes.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-size: 0.85rem; 
+                          background-color: {{ '#d4edda' if category == 'success' else '#f8d7da' }}; 
+                          color: {{ '#155724' if category == 'success' else '#721c24' }};">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('evaluaciones.listar_evaluaciones') }}" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Nombre de la Evaluación</label>
+                <input type="text" name="nombre" placeholder="Ej: Primer Parcial" required
+                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem;">
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Curso / Materia</label>
+                    <select name="curso_id" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; background-color: white;">
+                        <option value="">-- Seleccionar --</option>
+                        {% for c in cursos %}
+                            <option value="{{ c.curso_id }}">{{ c.nombre }}</option>
+                        {% else %}
+                            <option value="1">Análisis Matemático II (1C 2026)</option>
+                            <option value="2">Algoritmos y Programación (1C 2026)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Tipo de Examen</label>
+                    <select name="tipo_id" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; background-color: white;">
+                        <option value="">-- Seleccionar --</option>
+                        {% for t in tipos %}
+                            <option value="{{ t.tipo_id }}">{{ t.nombre }}</option>
+                        {% else %}
+                            <option value="1">Parcial</option>
+                            <option value="2">Trabajo Práctico</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Fecha</label>
+                    <input type="date" name="fecha" required value="2026-06-01"
+                           style="width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem;">
+                </div>
+                
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Peso (%)</label>
+                    <input type="number" name="peso" placeholder="Ej: 50" min="1" max="100" required
+                           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #333;">Temario / Descripción</label>
+                <textarea name="descripcion" rows="3" placeholder="Detalle los contenidos mínimos..."
+                          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; resize: none;"></textarea>
+            </div>
+
+            <button type="submit" 
+                    style="width: 100%; padding: 12px; background-color: #004b87; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">
+                Publicar Evaluación
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
