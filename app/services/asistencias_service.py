@@ -34,3 +34,28 @@ def asistencias_curso(fecha_buscada, token_usuario):
     except requests.exceptions.RequestException:
         return {"exito": False, "error": "Error de conexión con la API."}
 
+
+def validar_asistencia_qr(token_qr, token_alumno):
+    url_api = f"{API_BASE_URL}/asistencia/validar-qr/{token_qr}"
+
+    headers = {
+        'Authorization': f'Bearer {token_alumno}'
+    }
+
+    try:
+        respuesta = requests.post(url_api, headers=headers)
+        datos = respuesta.json()
+        codigo_http = respuesta.status_code
+
+        if codigo_http == 201:
+            return {'estado': 'exito', 'mensaje': datos.get('mensaje')}
+
+        elif codigo_http == 200:
+            return {'estado': 'advertencia', 'mensaje': datos.get('mensaje')}
+
+        else:
+            return {'estado': 'error', 'mensaje': datos.get('error', 'Error al procesar el QR')}
+
+    except Exception as e:
+        print(f"Error de conexión con la API Backend: {e}")
+        return {'estado': 'error', 'mensaje': 'Error de conexión con el servidor de la facultad.'}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
-from services.asistencias_service import disparar_envio_qr_api, asistencias_curso
+from services.asistencias_service import disparar_envio_qr_api, asistencias_curso, validar_asistencia_qr
 from datetime import datetime
 asistencias_bp = Blueprint("asistencia", __name__)
 
@@ -7,10 +7,6 @@ asistencias_bp = Blueprint("asistencia", __name__)
 @asistencias_bp.route('/', methods=['GET','POST'])
 def index():
     return render_template('asistencias/lista.html')
-
-@asistencias_bp.route('/validar/<token>')
-def validar(token):
-    return render_template('asistencias/validar.html', token=token)
 
 
 @asistencias_bp.route('/generar', methods=['GET', 'POST'])
@@ -47,3 +43,16 @@ def fecha_clase():
         return render_template('asistencias/lista.html', error=resultado['error'], fecha_actual=fecha)
 
 
+@asistencias_bp.route('/validar/<string:token>', methods=['GET'])
+def vista_escanear_qr(token):
+    token_alumno = session.get('token')
+
+
+    if not token_alumno:
+        return redirect('/login')
+
+    resultado = validar_asistencia_qr(token, token_alumno)
+
+    return render_template('asistencias/validar.html',
+                           estado=resultado['estado'],
+                           mensaje=resultado['mensaje'])

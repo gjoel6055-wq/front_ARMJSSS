@@ -2,6 +2,9 @@ from flask import Flask, render_template
 from routes.auth import auth_bp
 from routes.log import log_bp
 from routes.asistencias import asistencias_bp
+from routes.docentes import docentes_bp
+from routes.equipos import equipos_bp
+from routes.cursos import cursos_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
@@ -9,7 +12,10 @@ app.secret_key = 'una_clave_super_secreta_para_fiuba_2026'
 
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(log_bp, url_prefix='/log')
-app.register_blueprint(asistencias_bp, url_prefix='/asistencias')
+app.register_blueprint(asistencias_bp, url_prefix='/asistencia')
+app.register_blueprint(docentes_bp, url_prefix='/docentes')
+app.register_blueprint(equipos_bp)
+app.register_blueprint(cursos_bp)
 
 @app.route('/')
 def index():

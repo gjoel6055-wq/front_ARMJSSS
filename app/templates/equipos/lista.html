@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Equipos - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>Equipos</h2>
+    <p>Listado de equipos de trabajo. Podés filtrar por curso.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+{#  Filtro por curso  #}
+<div class="card-filtros">
+    <form method="GET" action="{{ url_for('equipos.lista') }}" class="form-filtros">
+        <div class="grupo-filtro">
+            <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Filtrar por curso</label>
+            <select name="curso_id" class="select-filtro">
+                <option value="">Todos los cursos</option>
+                {% for curso in cursos %}
+                    <option value="{{ curso.curso_id }}" {% if curso_id_activo == curso.curso_id %}selected{% endif %}>
+                        {{ curso.nombre }} — {{ curso.cuatrimestre }} {{ curso.anio }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-primario btn-filtro">Filtrar</button>
+        {% if curso_id_activo %}
+            <a href="{{ url_for('equipos.lista') }}" class="btn-primario btn-filtro" style="background-color: #6c757d; text-decoration: none; display: inline-block; text-align: center;">Limpiar</a>
+        {% endif %}
+    </form>
+</div>
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+    <a href="{{ url_for('equipos.crear') }}" class="btn-primario" style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
+        + Nuevo Equipo
+    </a>
+</div>
+
+<div class="tabla-responsive">
+    <table class="tabla-auditoria">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Curso</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if equipos %}
+                {% for equipo in equipos %}
+                <tr>
+                    <td class="td-ip">{{ equipo.equipo_id }}</td>
+                    <td><strong>{{ equipo.nombre }}</strong></td>
+                    <td>
+                        {% if equipo.curso_nombre %}
+                            <span class="badge badge-azul">{{ equipo.curso_nombre }}</span>
+                        {% else %}
+                            <span style="color: #6c757d;">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="td-detalle td-ip">{{ equipo.fecha_creacion or '—' }}</td>
+                    <td>
+                        <a href="{{ url_for('equipos.detalle', equipo_id=equipo.equipo_id) }}" class="badge badge-azul" style="text-decoration: none; margin-right: 4px;">Ver</a>
+                        <a href="{{ url_for('equipos.editar', equipo_id=equipo.equipo_id) }}" class="badge badge-gris" style="text-decoration: none; margin-right: 4px;">Editar</a>
+                        <form method="POST" action="{{ url_for('equipos.eliminar', equipo_id=equipo.equipo_id) }}" style="display: inline;" onsubmit="return confirm('¿Eliminar el equipo {{ equipo.nombre }}?')">
+                            <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="td-mensaje-vacio">
+                        {% if curso_id_activo %}
+                            No hay equipos para el curso seleccionado.
+                        {% else %}
+                            No hay equipos registrados.
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

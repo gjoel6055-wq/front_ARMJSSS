@@ -1,39 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Dar el Presente - Gestor FIUBA{% endblock %}
+{% block title %}Validar Asistencia - FIUBA{% endblock %}
 
 {% block content %}
-<div class="login-wrapper">
-    <div class="login-card tarjeta-centrada">
+<div class="wrapper-mitad">
+    <div class="tarjeta-centrada">
+        <div class="asistencia-header">
+            <h2>Registro de Asistencia</h2>
+            <p>Sistema de Gestión FIUBA</p>
+        </div>
 
-        <h2>Registro de Asistencia</h2>
-        <p>Estás a punto de registrar tu presente para el código: <strong>{{ codigo_clase }}</strong></p>
+        <div class="codigo-box" style="margin-top: 2rem;">
 
-        {% if error %}
-            <div class="alerta-error">
-                {{ error }}
-            </div>
-            <a href="{{ url_for('index') }}" class="auth-link">Volver al inicio</a>
-        {% endif %}
-
-        {% if exito %}
-            <div class="alerta-exito">
-                {{ exito }}
-            </div>
-            <a href="{{ url_for('index') }}" class="auth-link">Volver al panel</a>
-
-        {% elif not error %}
-            <form action="{{ url_for('asistencias.validar', codigo_clase=codigo_clase) }}" method="POST">
-                <div class="info-usuario">
-                    <span class="info-usuario-texto">
-                        Usuario: <strong>{{ session.get('usuario_nombre') }}</strong>
-                    </span>
+            {% if estado == 'exito' %}
+                <div class="alerta-exito" style="font-size: 1.2rem; padding: 2rem;">
+                    ✅ {{ mensaje }}
                 </div>
 
-                <button type="submit" class="btn-primario btn-verde">Confirmar Asistencia</button>
-            </form>
-        {% endif %}
+            {% elif estado == 'advertencia' %}
+                <div style="background-color: #cce5ff; color: #004085; padding: 2rem; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
+                    ⚠️ {{ mensaje }}
+                </div>
 
+            {% else %}
+                <div class="alerta-error" style="font-size: 1.1rem; padding: 2rem; border: 2px solid #dc3545;">
+                    ❌ {{ mensaje }}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a href='/' class="btn-secundario">Volver a Mi Panel</a>
+        </div>
     </div>
 </div>
 {% endblock %}
