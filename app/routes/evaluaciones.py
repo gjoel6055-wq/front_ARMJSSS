@@ -7,23 +7,26 @@ BACKEND_URL = "http://localhost:5001/api"
 
 @evaluaciones_bp.route('/evaluaciones', methods=['GET'])
 def listar_evaluaciones():
-    token = session.get('token')
-    
-    if not token:
+    if not session.get('token'):
         flash("Debes iniciar sesión para ver las evaluaciones.", "error")
         return redirect(url_for('auth.login'))
+
+    if session.get('rol') != 'docente':
+        flash("Acceso denegado: Solo los docentes pueden ver esta sección.", danger)
+        return redirect(url_for('dashboard'))
+        
+    token = session.get('token')
+    headers = {"Authorization": f"Bearer {token}"}
+    
         
     try:
-        headers = {"Authorization": f"Bearer {token}"}
         respuesta = requests.get(f"{BACKEND_URL}/evaluaciones", headers=headers)
-        
         if respuesta.status_code == 200:
             lista_de_evaluaciones = respuesta.json()
         else:
             lista_de_evaluaciones = []
-            flash("No se pudieron cargar las evaluaciones.", "error")
-            
-    except requests.exceptions.RequestException:
+            flash("No se pudieron cargar las evaluaciones desde el servidor.", "error")
+     except requests.exceptions.RequestException:
         lista_de_evaluaciones = []
         flash("Error de conexión con el servidor backend.", "error")
 
@@ -31,41 +34,42 @@ def listar_evaluaciones():
 
 
 @evaluaciones_bp.route('/evaluaciones/crear', methods=['GET'])
-def formulario_crear():
+def crear_evaluacion():
     if not session.get('token'):
-        flash("Debes iniciar sesión para planificar evaluaciones.", "error")
+        flash("Debes iniciar sesión para crear evaluaciones.", "error")
         return redirect(url_for('auth.login'))
         
     return render_template('evaluaciones/form.html', cursos=[], tipos=[])
 
-
-@evaluaciones_bp.route('/evaluaciones/guardar', methods=['POST'])
-def guardar_evaluacion():
-    token = session.get('token')
-    if not token:
-        flash("Sesión expirada. Inicia sesión nuevamente.", "error")
+@evaluaciones_bp.route('/evaluaciones/crear', methods=['GET', 'POST'])
+def crear_evaluacion():
+    if not session.get('token'):
+        flash("Debes iniciar sesión para crear evaluaciones.", "error")
         return redirect(url_for('auth.login'))
 
-    datos_formulario = {
-        "nombre": request.form.get("nombre"),
-        "curso_id": int(request.form.get("curso_id")),
-        "tipo_id": int(request.form.get("tipo_id")),
-        "fecha": request.form.get("fecha"),
-        "peso": float(request.form.get("peso"))
-    }
-    
-    try:
+    if session.get('rol') != 'docente':
+        flash("Acceso denegado: Solo los docentes pueden crear evaluaciones.", "danger")
+        return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        datos_evaluacion = {
+            'nombre': request.form['nombre'],
+            'fecha': request.form['fecha'],
+            'tipo': request.form['tipo']
+        }
+
+        token = session.get('token')
         headers = {"Authorization": f"Bearer {token}"}
-        respuesta = requests.post(f"{BACKEND_URL}/evaluaciones", json=datos_formulario, headers=headers)
-        
-        if respuesta.status_code == 201:
-            flash("¡Evaluación planificada y creada con éxito!", "success")
-            return redirect(url_for('evaluaciones.listar_evaluaciones'))
-        else:
-            error_msg = respuesta.json().get('error', 'Error desconocido.')
-            flash(f"Error al crear: {error_msg}", "error")
-            
-    except requests.exceptions.RequestException:
-        flash("No se pudo conectar con el backend para guardar la evaluación.", "error")
-        
-    return redirect(url_for('evaluaciones.formulario_crear'))
+
+        try:
+            respuesta = requests.post(f"{BACKEND_URL}/evaluaciones", json=datos_evaluacion, headers=headers)
+            if respuesta.status_code == 201:
+                flash("¡Evaluación creada con éxito!", "success")
+                return redirect(url_for('evaluaciones.listar_evaluaciones'))
+            else:
+                error_msg = respuesta.json().get('error', 'Error desconocido.')
+                flash(f"Error al crear la evaluación: {error_msg}", "error")
+        except requests.exceptions.RequestException:
+            flash("Error de conexión con el servidor backend.", "error")
+
+    return render_template('evaluaciones/form.html')
