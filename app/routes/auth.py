@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from services.auth_service import hacer_login, hacer_logout, registrar_nuevo_usuario
+from app.services.auth_service import hacer_login, hacer_logout, registrar_nuevo_usuario
 
 auth_bp = Blueprint('auth', __name__)
 

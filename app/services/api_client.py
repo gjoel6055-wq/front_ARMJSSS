@@ -2,7 +2,7 @@ import os
 import requests
 from flask import session
 
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:5000").rstrip("/")
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
 TIMEOUT = 10
 
 

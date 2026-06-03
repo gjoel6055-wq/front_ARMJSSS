@@ -109,7 +109,7 @@ def index():
             }
 
     return render_template(
-        "calificaciones/dashboard.html",
+        "dashboard/dashboard.html",
         notas=todas_notas,
         mis_notas=mis_notas,
         evaluaciones=evaluaciones,

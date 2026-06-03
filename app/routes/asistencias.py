@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
-from services.asistencias_service import disparar_envio_qr_api, asistencias_curso, validar_asistencia_qr
+from app.services.asistencias_service import disparar_envio_qr_api, asistencias_curso, validar_asistencia_qr
 from datetime import datetime
 asistencias_bp = Blueprint("asistencia", __name__)
 

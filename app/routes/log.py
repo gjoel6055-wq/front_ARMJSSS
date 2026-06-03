@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
-from services.log_service import obtener_logs_api, obtener_log_por_id_api
+from app.services.log_service import obtener_logs_api, obtener_log_por_id_api
 
 log_bp = Blueprint('log', __name__)
 
