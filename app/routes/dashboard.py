@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from app.services.api_client import get, post, put, delete
+from services.api_client import get, post, put, delete
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -109,7 +109,7 @@ def index():
             }
 
     return render_template(
-        "calificaciones/dashboard.html",
+        "dashboard/dashboard.html",
         notas=todas_notas,
         mis_notas=mis_notas,
         evaluaciones=evaluaciones,

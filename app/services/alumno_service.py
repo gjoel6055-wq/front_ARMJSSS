@@ -1,4 +1,4 @@
-from app.services.api_client import get, post, put, delete
+from services.api_client import get, post, put, delete
 
 
 def obtener_alumnos():

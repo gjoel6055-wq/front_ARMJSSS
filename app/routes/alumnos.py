@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from app.services import alumno_service
+from services import alumno_service
 
 alumnos_bp = Blueprint("alumnos", __name__)
 
@@ -73,7 +73,7 @@ def editar(id):
     if redir:
         return redir
 
-    from app.services import curso_service
+    from services import curso_service
     try:
         alumno = alumno_service.obtener_alumno(id)
         cursos_disponibles = curso_service.obtener_todos()
