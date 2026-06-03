@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}{{ equipo.nombre }} - Gestor FIUBA{% endblock %}
+
+{% block content %}
+<div class="modulo-header">
+    <h2>{{ equipo.nombre }}</h2>
+    <p>Detalle del equipo — gestión de integrantes y evaluaciones asignadas.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+{#  Info general  #}
+<div class="card-filtros">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem;">
+        <div>
+            <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Nombre</p>
+            <p style="margin: 0.25rem 0 0 0; font-size: 1.05rem; font-weight: bold;">{{ equipo.nombre }}</p>
+        </div>
+        <div>
+            <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Curso</p>
+            <p style="margin: 0.25rem 0 0 0;">
+                <span class="badge badge-azul">{{ equipo.curso_nombre or '—' }}</span>
+            </p>
+        </div>
+        <div>
+            <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Creado el</p>
+            <p style="margin: 0.25rem 0 0 0; font-family: monospace; font-size: 0.95rem;">{{ equipo.fecha_creacion or '—' }}</p>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #dee2e6;">
+        <a href="{{ url_for('equipos.editar', equipo_id=equipo.equipo_id) }}" class="btn-primario" style="width: auto; padding: 0.5rem 1.2rem; margin: 0; text-decoration: none; display: inline-block;">
+            Editar
+        </a>
+        <a href="{{ url_for('equipos.lista') }}" class="btn-primario" style="width: auto; padding: 0.5rem 1.2rem; margin: 0; background-color: #6c757d; text-decoration: none; display: inline-block;">
+            ← Volver
+        </a>
+        <form method="POST" action="{{ url_for('equipos.eliminar', equipo_id=equipo.equipo_id) }}" onsubmit="return confirm('¿Eliminar el equipo {{ equipo.nombre }}?')">
+            <button type="submit" class="btn-primario" style="width: auto; padding: 0.5rem 1.2rem; margin: 0; background-color: #dc3545;">
+                Eliminar equipo
+            </button>
+        </form>
+    </div>
+</div>
+
+{#  Alumnos  #}
+<div class="modulo-header" style="margin-top: 2rem;">
+    <h2 style="font-size: 1.3rem;">Integrantes</h2>
+</div>
+
+<div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start;">
+
+    {# Tabla de alumnos actuales #}
+    <div style="flex: 1; min-width: 280px;">
+        <div class="tabla-responsive">
+            <table class="tabla-auditoria">
+                <thead>
+                    <tr>
+                        <th>Padrón</th>
+                        <th>Nombre y Apellido</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if equipo.alumnos %}
+                        {% for alumno in equipo.alumnos %}
+                        <tr>
+                            <td class="td-ip">{{ alumno.padron }}</td>
+                            <td><strong>{{ alumno.apellido }}, {{ alumno.nombre }}</strong></td>
+                            <td>
+                                <form method="POST" action="{{ url_for('equipos.quitar_alumno', equipo_id=equipo.equipo_id) }}" onsubmit="return confirm('¿Quitar a {{ alumno.apellido }} del equipo?')">
+                                    <input type="hidden" name="padron" value="{{ alumno.padron }}">
+                                    <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">Quitar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="td-mensaje-vacio">Sin integrantes aún.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Formulario para agregar alumno #}
+    <div class="card-filtros" style="min-width: 220px; max-width: 280px; margin: 0;">
+        <p style="font-weight: 700; color: #004b87; margin: 0 0 1rem 0; font-size: 0.9rem; text-transform: uppercase;">Agregar integrante</p>
+        <form method="POST" action="{{ url_for('equipos.agregar_alumno', equipo_id=equipo.equipo_id) }}">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="padron" style="font-size: 0.85rem;">Padrón del alumno</label>
+                <input type="number" id="padron" name="padron" placeholder="Ej: 104500" required style="padding: 0.6rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.95rem; font-family: inherit; width: 100%;">
+            </div>
+            <button type="submit" class="btn-primario" style="margin: 0; padding: 0.6rem; font-size: 0.9rem;">+ Agregar</button>
+        </form>
+    </div>
+</div>
+
+{#  Evaluaciones  #}
+<div class="modulo-header" style="margin-top: 2.5rem;">
+    <h2 style="font-size: 1.3rem;">Evaluaciones asignadas</h2>
+</div>
+
+<div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start;">
+
+    {# Tabla de evaluaciones actuales #}
+    <div style="flex: 1; min-width: 280px;">
+        <div class="tabla-responsive">
+            <table class="tabla-auditoria">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if equipo.evaluaciones %}
+                        {% for evaluacion in equipo.evaluaciones %}
+                        <tr>
+                            <td class="td-ip">{{ evaluacion.evaluacion_id }}</td>
+                            <td><strong>{{ evaluacion.nombre }}</strong></td>
+                            <td class="td-detalle">{{ evaluacion.fecha or '—' }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('equipos.quitar_evaluacion', equipo_id=equipo.equipo_id) }}" onsubmit="return confirm('¿Desvincular la evaluación {{ evaluacion.nombre }}?')">
+                                    <input type="hidden" name="evaluacion_id" value="{{ evaluacion.evaluacion_id }}">
+                                    <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">Quitar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="td-mensaje-vacio">Sin evaluaciones asignadas.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Formulario para agregar evaluación #}
+    <div class="card-filtros" style="min-width: 220px; max-width: 280px; margin: 0;">
+        <p style="font-weight: 700; color: #004b87; margin: 0 0 1rem 0; font-size: 0.9rem; text-transform: uppercase;">Asignar evaluación</p>
+        <form method="POST" action="{{ url_for('equipos.agregar_evaluacion', equipo_id=equipo.equipo_id) }}">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="evaluacion_id" style="font-size: 0.85rem;">ID de evaluación</label>
+                <input type="number" id="evaluacion_id" name="evaluacion_id" placeholder="Ej: 3" required style="padding: 0.6rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.95rem; font-family: inherit; width: 100%;">
+            </div>
+            <button type="submit" class="btn-primario" style="margin: 0; padding: 0.6rem; font-size: 0.9rem;">+ Asignar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
