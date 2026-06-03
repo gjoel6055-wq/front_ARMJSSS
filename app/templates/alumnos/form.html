@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}{% if accion == 'crear' %}Nuevo Alumno{% else %}Editar Alumno{% endif %} - FIUBA{% endblock %}
+{% block content %}
+
+
+<a href="{{ url_for('alumnos.lista') }}" class="back-link">← Volver al listado</a>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class="flashes">
+    {% for category, message in messages %}
+    <li class="flash-msg flash-{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div class="form-card">
+    <div class="form-header">
+        <h1>✏️ Editar Alumno</h1>
+        <p>Modificá los datos del estudiante. Dejá la contraseña en blanco para no cambiarla.</p>
+    </div>
+
+    <div class="form-body">
+        <form method="POST">
+            {% if accion == 'crear' %}
+            <div class="form-group">
+                <label for="padron">Padrón *</label>
+                <input type="number" id="padron" name="padron" class="form-control"
+                       placeholder="Ej: 100001" required
+                       value="{{ alumno.padron if alumno else '' }}">
+                <div class="form-hint">Número de padrón único del alumno.</div>
+            </div>
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control"
+                           placeholder="Ej: Lucas" required
+                           value="{{ alumno.nombre if alumno else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido *</label>
+                    <input type="text" id="apellido" name="apellido" class="form-control"
+                           placeholder="Ej: Pérez" required
+                           value="{{ alumno.apellido if alumno else '' }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" class="form-control"
+                       placeholder="alumno@fi.uba.ar" required
+                       value="{{ alumno.email if alumno else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña {% if accion == 'editar' %}(dejar en blanco para no cambiar){% else %}*{% endif %}</label>
+                <input type="password" id="password" name="password" class="form-control"
+                       placeholder="{% if accion == 'crear' %}Mínimo 8 caracteres{% else %}Sin cambios si se deja vacío{% endif %}"
+                       {% if accion == 'crear' %}required{% endif %}>
+            </div>
+
+            <div class="form-group">
+                <label>Estado académico</label>
+                <div class="switch-row">
+                    <div>
+                        <div class="switch-label">En abandono</div>
+                        <div class="switch-desc">Marcar si el alumno abandonó la cursada.</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="abandono" value="1"
+                               {% if alumno and alumno.abandono %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            {% if accion == 'editar' and cursos_disponibles %}
+            <div class="form-group">
+                <label>Inscripción a Cursos</label>
+                <div style="background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; padding: 1rem 1.25rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% for curso in cursos_disponibles %}
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; font-weight: 500; text-transform: none; color: #212529; cursor: pointer;">
+                                {% set is_enrolled = [] %}
+                                {% if alumno.cursos %}
+                                    {% for c in alumno.cursos %}
+                                        {% if c.curso_id == curso.curso_id %}
+                                            {% set _ = is_enrolled.append(1) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                <input type="checkbox" name="cursos" value="{{ curso.curso_id }}" style="width: 18px; height: 18px; cursor: pointer;"
+                                       {% if is_enrolled %}checked{% endif %}>
+                                <span>{{ curso.nombre }} ({{ curso.anio }} - {{ curso.cuatrimestre }})</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="form-footer">
+                <a href="{{ url_for('alumnos.lista') }}" class="btn-cancel">Cancelar</a>
+                <button type="submit" class="btn-submit">
+                    {% if accion == 'crear' %}✅ Crear Alumno{% else %}💾 Guardar Cambios{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

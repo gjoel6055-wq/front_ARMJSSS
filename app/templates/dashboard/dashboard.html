@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Dashboard de Calificaciones - FIUBA{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class="flashes">
+    {% for category, message in messages %}
+    <li class="flash-msg flash-{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div class="page-header">
+    <h1>📊 Calificaciones y Evaluaciones</h1>
+    <p>
+        {% if rol == 'docente' %}
+            Carga y administración de notas individuales y por equipos.
+        {% else %}
+            Tus calificaciones y evaluaciones registradas.
+        {% endif %}
+    </p>
+</div>
+
+<!-- Stats y Métricas del Alumno (Personales) -->
+{% if stats_alumno %}
+<h3 style="color:#004b87; font-weight:700; margin-bottom: 0.75rem;">📈 Mis Estadísticas Personales</h3>
+<div class="calif-stats">
+    <div class="calif-card">
+        <span class="calif-card-icon">📈</span>
+        <div>
+            <div class="calif-card-num">{{ "%.1f"|format(stats_alumno.tasa_aprobacion) }}%</div>
+            <div class="calif-card-lbl">Mi Aprobación</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">✅</span>
+        <div>
+            <div class="calif-card-num">{{ stats_alumno.aprobados }}</div>
+            <div class="calif-card-lbl">Mis Aprobadas</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">❌</span>
+        <div>
+            <div class="calif-card-num">{{ stats_alumno.reprobados }}</div>
+            <div class="calif-card-lbl">Mis Reprobadas</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">📊</span>
+        <div>
+            <div class="calif-card-num">{{ stats_alumno.total }}</div>
+            <div class="calif-card-lbl">Mis Evaluaciones</div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Stats y Métricas Generales -->
+{% if stats_gral %}
+<h3 style="color:#004b87; font-weight:700; margin-bottom: 0.75rem; margin-top: 1.5rem;">🌍 Estadísticas Generales del Curso</h3>
+<div class="calif-stats">
+    <div class="calif-card">
+        <span class="calif-card-icon">📈</span>
+        <div>
+            <div class="calif-card-num">{{ "%.1f"|format(stats_gral.tasa_aprobacion) }}%</div>
+            <div class="calif-card-lbl">Aprobación Gral.</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">✅</span>
+        <div>
+            <div class="calif-card-num">{{ stats_gral.aprobados }}</div>
+            <div class="calif-card-lbl">Aprobados Gral.</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">❌</span>
+        <div>
+            <div class="calif-card-num">{{ stats_gral.reprobados }}</div>
+            <div class="calif-card-lbl">Reprobados Gral.</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">📊</span>
+        <div>
+            <div class="calif-card-num">{{ stats_gral.total }}</div>
+            <div class="calif-card-lbl">Total Notas Gral.</div>
+        </div>
+    </div>
+    {% if stats_dashboard %}
+    <div class="calif-card">
+        <span class="calif-card-icon">⭐</span>
+        <div>
+            <div class="calif-card-num">
+                {% if stats_dashboard.promedioNotas %}
+                    {{ "%.2f"|format(stats_dashboard.promedioNotas | float) }}
+                {% else %}
+                    0.00
+                {% endif %}
+            </div>
+            <div class="calif-card-lbl">Nota Promedio Gral</div>
+        </div>
+    </div>
+    <div class="calif-card">
+        <span class="calif-card-icon">📅</span>
+        <div>
+            <div class="calif-card-num">
+                {% if stats_dashboard.asistenciaPromedio %}
+                    {{ "%.1f"|format(stats_dashboard.asistenciaPromedio | float) }}%
+                {% else %}
+                    0.0%
+                {% endif %}
+            </div>
+            <div class="calif-card-lbl">Asistencia Promedio Gral</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Filtros de Orden y Aprobación -->
+<div class="filtros-notas">
+    <div class="filtro-select-group">
+        <label for="select-orden">↕️ Ordenar por Calificación:</label>
+        <select id="select-orden" class="form-control" style="width: auto;" onchange="aplicarFiltrosYOrden()">
+            <option value="default">Por defecto (Carga)</option>
+            <option value="high">Calificaciones más altas primero</option>
+            <option value="low">Calificaciones más bajas primero</option>
+        </select>
+    </div>
+    <div class="filtro-select-group">
+        <label for="select-estado-filtro">🔍 Mostrar:</label>
+        <select id="select-estado-filtro" class="form-control" style="width: auto;" onchange="aplicarFiltrosYOrden()">
+            <option value="todos">Todos</option>
+            <option value="aprobados">Solo Aprobados (>= 4)</option>
+            <option value="reprobados">Solo Reprobados (< 4)</option>
+        </select>
+    </div>
+</div>
+
+<!-- Listado / Visualización de Notas -->
+<div class="tabla-wrapper">
+    <div class="form-card-header">📋 Calificaciones Registradas</div>
+    {% if notas %}
+    <table class="tabla" id="tabla-calificaciones">
+        <thead>
+            <tr>
+                <th>Alumno</th>
+                <th>Padrón</th>
+                <th>Evaluación</th>
+                <th>Curso</th>
+                <th>Nota</th>
+                <th>Fecha de Carga</th>
+                <th>Observación</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-calificaciones">
+            {% for n in notas %}
+            {% set es_mia = [] %}
+            {% if mis_notas %}
+                {% for mn in mis_notas %}
+                    {% if mn.nota_id == n.nota_id %}
+                        {% set _ = es_mia.append(1) %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <tr class="nota-row" data-nota="{{ n.nota | float }}" {% if es_mia %}style="background-color: #f0f6ff; border-left: 4px solid #004b87;"{% endif %}>
+                <td style="font-weight: 600;">
+                    {{ n.alumno_nombre }} {{ n.alumno_apellido }}
+                    {% if es_mia %}
+                        <span style="background: #004b87; color: white; font-size: 0.68rem; padding: 0.15rem 0.35rem; border-radius: 4px; margin-left: 0.4rem; vertical-align: middle;">Mía</span>
+                    {% endif %}
+                </td>
+                <td>{{ n.padron }}</td>
+                <td style="font-weight: 600; color: #004b87;">{{ n.evaluacion_nombre }}</td>
+                <td>{{ n.curso_nombre }}</td>
+                <td>
+                    {% set val = n.nota | float %}
+                    <span class="nota-badge {% if val >= 7 %}nota-alta{% elif val >= 4 %}nota-media{% else %}nota-baja{% endif %}">
+                        {{ "%.1f" | format(val) }}
+                    </span>
+                </td>
+                <td style="font-size:0.88rem; color:#6c757d;">{{ n.fecha_carga[:10] if n.fecha_carga is string else n.fecha_carga }}</td>
+                <td style="font-size:0.88rem; color:#495057;">{{ n.observacion if n.observacion else '—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; color: #6c757d;">
+        <span style="font-size:2.5rem;">📋</span>
+        <p style="margin-top: 1rem; font-weight: 500;">No hay calificaciones registradas para mostrar.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function aplicarFiltrosYOrden() {
+        var orden = document.getElementById('select-orden').value;
+        var estado = document.getElementById('select-estado-filtro').value;
+        var tbody = document.getElementById('tbody-calificaciones');
+        if (!tbody) return;
+
+        var rows = Array.from(tbody.querySelectorAll('.nota-row'));
+
+        // 1. Filtrar filas
+        rows.forEach(function(row) {
+            var nota = parseFloat(row.getAttribute('data-nota'));
+            var show = true;
+            if (estado === 'aprobados' && nota < 4.0) {
+                show = false;
+            } else if (estado === 'reprobados' && nota >= 4.0) {
+                show = false;
+            }
+            row.style.display = show ? '' : 'none';
+        });
+
+        // 2. Ordenar filas
+        if (orden === 'high') {
+            rows.sort(function(a, b) {
+                return parseFloat(b.getAttribute('data-nota')) - parseFloat(a.getAttribute('data-nota'));
+            });
+        } else if (orden === 'low') {
+            rows.sort(function(a, b) {
+                return parseFloat(a.getAttribute('data-nota')) - parseFloat(b.getAttribute('data-nota'));
+            });
+        }
+
+        rows.forEach(function(row) {
+            tbody.appendChild(row);
+        });
+    }
+</script>
+{% endblock %}

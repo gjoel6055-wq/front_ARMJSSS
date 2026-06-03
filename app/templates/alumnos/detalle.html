@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Detalle Alumno - FIUBA{% endblock %}
+{% block content %}
+
+
+<a href="{{ url_for('alumnos.lista') }}" class="back-link">← Volver al listado</a>
+
+<div class="detalle-card">
+    <div class="detalle-header">
+        <div class="avatar-lg">{{ alumno.nombre[0]|upper }}{{ alumno.apellido[0]|upper }}</div>
+        <div class="header-info">
+            <h1>{{ alumno.nombre }} {{ alumno.apellido }}</h1>
+            <p>{{ alumno.email }}</p>
+            {% if alumno.abandono %}
+                <span class="header-badge badge-inactivo">❌ En abandono</span>
+            {% else %}
+                <span class="header-badge badge-activo">✅ Alumno activo</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="detalle-body">
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Padrón</div>
+                <div class="info-value mono">{{ alumno.padron }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Nombre</div>
+                <div class="info-value">{{ alumno.nombre }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Apellido</div>
+                <div class="info-value">{{ alumno.apellido }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ alumno.email }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Fecha de Registro</div>
+                <div class="info-value">
+                    {% if alumno.fecha_registro %}
+                        {{ alumno.fecha_registro[:10] if alumno.fecha_registro is string else alumno.fecha_registro }}
+                    {% else %}—{% endif %}
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Estado</div>
+                <div class="info-value">{% if alumno.abandono %}En abandono{% else %}Activo{% endif %}</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; margin-bottom: 2rem;">
+            <h3 style="color:#004b87; font-weight:700; margin-bottom: 1rem; font-size: 1.2rem; border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem;">📚 Cursos Inscriptos</h3>
+            {% if alumno.cursos %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                    {% for curso in alumno.cursos %}
+                        <div style="background: #f8f9fa; border: 1px solid #e9ecef; padding: 1rem; border-radius: 10px; transition: all 0.2s;">
+                            <strong style="color: #212529; font-size: 1rem;">{{ curso.nombre }}</strong>
+                            <div style="font-size: 0.85rem; color: #6c757d; margin-top: 0.3rem;">
+                                <span>📅 {{ curso.anio }} - {{ curso.cuatrimestre }}</span>
+                            </div>
+                            {% if curso.descripcion %}
+                                <p style="font-size: 0.85rem; color: #495057; margin-top: 0.5rem; margin-bottom: 0; line-height: 1.4;">{{ curso.descripcion }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color:#6c757d; font-style:italic;">Este alumno no está inscripto en ningún curso actualmente.</p>
+            {% endif %}
+        </div>
+
+        <div class="acciones-footer">
+            <a href="{{ url_for('alumnos.editar', id=alumno.padron) }}" class="btn-editar">✏️ Editar Alumno</a>
+            <form action="{{ url_for('alumnos.eliminar', id=alumno.padron) }}" method="POST" onsubmit="return confirm('¿Estás seguro que querés eliminar a {{ alumno.nombre }} {{ alumno.apellido }}?')">
+                <button type="submit" class="btn-eliminar">🗑️ Eliminar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

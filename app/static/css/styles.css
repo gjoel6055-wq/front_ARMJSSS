@@ -600,3 +600,438 @@ body {
 .texto-centrado { text-align: center; }
 .texto-exito { color: #28a745; font-weight: 600; }
 .texto-peligro { color: #dc3545; font-weight: 600; }
+
+/* ==========================================================================
+   11. ALUMNOS LIST STYLES
+   ========================================================================== */
+.stats-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 160px;
+}
+.stat-icon { font-size: 1.8rem; }
+.stat-num { font-size: 1.6rem; font-weight: 800; color: #004b87; line-height: 1; }
+.stat-label { font-size: 0.8rem; color: #6c757d; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.filtros {
+    background: white;
+    border: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.filtro-grupo { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
+.filtro-grupo label { font-size: 0.78rem; font-weight: 700; color: #004b87; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.filtro-input {
+    padding: 0.7rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background: #f8f9fa;
+    color: #212529;
+}
+.filtro-input:focus { outline: none; border-color: #004b87; background: white; }
+.btn-reset {
+    padding: 0.7rem 1.25rem;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.btn-reset:hover { border-color: #004b87; color: #004b87; }
+
+.avatar-alumno {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #004b87;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+.user-cell { display: flex; align-items: center; gap: 0.75rem; }
+.user-name { font-weight: 600; color: #212529; }
+.user-email { font-size: 0.82rem; color: #6c757d; }
+
+.padron-badge {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: #004b87;
+    background: #e8f1fb;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+.estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+.estado-activo   { background: #d1fae5; color: #065f46; }
+.estado-inactivo { background: #fee2e2; color: #991b1b; }
+
+.acciones { display: flex; gap: 0.5rem; }
+.btn-ver  { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; text-decoration: none; background: #e8f1fb; color: #004b87; border: 1px solid #bee3f8; transition: all 0.2s; }
+.btn-edit { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; text-decoration: none; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; transition: all 0.2s; }
+.btn-del  { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; transition: all 0.2s; }
+.btn-ver:hover  { background: #004b87; color: white; }
+.btn-edit:hover { background: #f59e0b; color: white; }
+.btn-del:hover  { background: #ef4444; color: white; }
+
+.empty-state { text-align: center; padding: 4rem 2rem; color: #6c757d; }
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+.contador { font-size: 0.85rem; color: #6c757d; padding: 0.75rem 1.25rem; border-top: 1px solid #e9ecef; background: #f8f9fa; }
+
+/* ==========================================================================
+   12. CALIFICACIONES DASHBOARD STYLES
+   ========================================================================== */
+.flashes { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+.flash-msg {
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+.flash-success { background: #d1fae5; color: #065f46; }
+.flash-danger { background: #fee2e2; color: #991b1b; }
+
+.calif-stats { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.calif-card { background: white; border-radius: 12px; padding: 1.25rem; border: 1px solid #e9ecef; box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex: 1; min-width: 150px; display: flex; align-items: center; gap: 1rem; }
+.calif-card-icon { font-size: 2rem; }
+.calif-card-num { font-size: 1.5rem; font-weight: 800; color: #004b87; line-height: 1; }
+.calif-card-lbl { font-size: 0.8rem; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.filtros-notas { background: white; border: 1px solid #e9ecef; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.filtro-select-group { display: flex; align-items: center; gap: 0.5rem; }
+.filtro-select-group label { font-size: 0.85rem; font-weight: 700; color: #004b87; text-transform: uppercase; }
+
+/* Shared table styling moved from templates to styles.css */
+.tabla-wrapper {
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th {
+    background: #f8f9fa;
+    color: #004b87;
+    font-weight: 700;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #e9ecef;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+    text-align: left;
+}
+.tabla td { padding: 1rem 1.25rem; border-bottom: 1px solid #f1f3f5; vertical-align: middle; }
+.tabla tbody tr { transition: background 0.0001s; }
+.tabla tbody tr:hover { background: #f0f6ff; }
+.tabla tbody tr:last-child td { border-bottom: none; }
+
+.page-header {
+    background: #004b87;
+    color: white;
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 12px 40px rgba(0,75,135,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.page-header h1 { margin: 0; font-size: 2rem; font-weight: 800; }
+.page-header p { margin: 0.4rem 0 0; opacity: 0.8; font-size: 1rem; }
+
+.nota-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+.nota-alta { background: #d1fae5; color: #065f46; }
+.nota-media { background: #fef3c7; color: #92400e; }
+.nota-baja { background: #fee2e2; color: #991b1b; }
+
+/* ==========================================================================
+   13. ALUMNOS DETAIL STYLES
+   ========================================================================== */
+.back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: #004b87; text-decoration: none; font-weight: 600; font-size: 0.9rem; margin-bottom: 1.5rem; transition: gap 0.2s; }
+.back-link:hover { gap: 0.7rem; }
+
+.detalle-card {
+    background: white;
+    overflow: hidden;
+}
+.detalle-header {
+    background: #004b87;
+    padding: 2.5rem 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+.detalle-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -5%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 3px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+}
+.header-info h1 { margin: 0; font-size: 1.8rem; font-weight: 800; }
+.header-info p  { margin: 0.3rem 0 0; opacity: 0.8; font-size: 0.95rem; }
+.header-badge {
+    margin-top: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+.badge-activo   { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.badge-inactivo { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+
+.detalle-body { padding: 2rem; }
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+.info-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e9ecef;
+    transition: border-color 0.2s;
+}
+.info-label { font-size: 0.75rem; font-weight: 700; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+.info-value { font-size: 1rem; font-weight: 600; color: #212529; }
+.info-value.mono { font-family: 'Courier New', monospace; color: #004b87; }
+
+.acciones-footer {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+    flex-wrap: wrap;
+}
+.btn-editar {
+    padding: 0.75rem 1.5rem;
+    background: #004b87;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-editar:hover { background: #003a6b; transform: translateY(-1px); }
+.btn-eliminar {
+    padding: 0.75rem 1.5rem;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 2px solid #fecaca;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-eliminar:hover { background: #ef4444; color: white; border-color: #ef4444; transform: translateY(-1px); }
+
+/* ==========================================================================
+   14. ALUMNOS FORM STYLES
+   ========================================================================== */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.form-header {
+    background: #004b87;
+    padding: 2rem;
+    color: white;
+}
+.form-header h1 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+.form-header p  { margin: 0.4rem 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+.form-body { padding: 2rem; }
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #004b87;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #212529;
+    background: #f8f9fa;
+    transition: all 0.2s;
+}
+.form-control:focus {
+    outline: none;
+    border-color: #004b87;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0,75,135,0.1);
+}
+.form-hint { font-size: 0.78rem; color: #6c757d; margin-top: 0.35rem; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+.switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    transition: border-color 0.2s;
+}
+.switch-row:hover { border-color: #004b87; }
+.switch-label { font-weight: 600; color: #212529; font-size: 0.95rem; }
+.switch-desc  { font-size: 0.82rem; color: #6c757d; margin-top: 0.2rem; }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #dee2e6;
+    border-radius: 26px;
+    transition: 0.3s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input:checked + .slider { background: #ef4444; }
+input:checked + .slider:before { transform: translateX(22px); }
+
+.form-footer {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+    justify-content: flex-end;
+}
+.btn-submit {
+    padding: 0.85rem 2rem;
+    background: #004b87;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-submit:hover { background: #003a6b; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,75,135,0.3); }
+.btn-cancel {
+    padding: 0.85rem 1.5rem;
+    background: white;
+    color: #6c757d;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+.btn-cancel:hover { border-color: #004b87; color: #004b87; }
+
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Alumnos - FIUBA{% endblock %}
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class="flashes">
+    {% for category, message in messages %}
+    <li class="flash-msg flash-{{ category }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div class="page-header">
+    <div>
+        <h1>🎓 Directorio de Alumnos</h1>
+        <p>Gestión completa de estudiantes registrados en el sistema.</p>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+    <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div>
+            <div class="stat-num" id="statTotal">{{ alumnos|length }}</div>
+            <div class="stat-label">Total alumnos</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">✅</span>
+        <div>
+            <div class="stat-num" id="statActivos">{{ alumnos|selectattr('abandono', 'equalto', 0)|list|length }}</div>
+            <div class="stat-label">Activos</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">❌</span>
+        <div>
+            <div class="stat-num" id="statInactivos">{{ alumnos|selectattr('abandono', 'equalto', 1)|list|length }}</div>
+            <div class="stat-label">En abandono</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">🔍</span>
+        <div>
+            <div class="stat-num" id="statVisibles">{{ alumnos|length }}</div>
+            <div class="stat-label">Mostrando</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="filtros">
+    <div class="filtro-grupo">
+        <label for="buscarInput">🔍 Buscar</label>
+        <input type="text" id="buscarInput" class="filtro-input" placeholder="Nombre, apellido, padrón o email..." oninput="filtrar()">
+    </div>
+    <div class="filtro-grupo">
+        <label for="estadoFiltro">Estado</label>
+        <select id="estadoFiltro" class="filtro-input" onchange="filtrar()">
+            <option value="">Todos</option>
+            <option value="activo">Activos</option>
+            <option value="inactivo">En abandono</option>
+        </select>
+    </div>
+    <button class="btn-reset" onclick="resetFiltros()">✖ Limpiar</button>
+</div>
+
+<!-- Tabla -->
+<div class="tabla-wrapper" data-total-alumnos="{{ alumnos|length }}">
+    <table class="tabla" id="tablaAlumnos">
+        <thead>
+            <tr>
+                <th>Padrón</th>
+                <th>Alumno</th>
+                <th>Fecha registro</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaBody">
+            {% for alumno in alumnos %}
+            <tr class="alumno-row"
+                data-padron="{{ alumno.padron }}"
+                data-nombre="{{ alumno.nombre | lower }} {{ alumno.apellido | lower }}"
+                data-email="{{ alumno.email | lower }}"
+                data-estado="{% if alumno.abandono %}inactivo{% else %}activo{% endif %}">
+
+                <td><span class="padron-badge">{{ alumno.padron }}</span></td>
+                <td>
+                    <div class="user-cell">
+                        <div class="avatar-alumno">{{ alumno.nombre[0]|upper }}{{ alumno.apellido[0]|upper }}</div>
+                        <div>
+                            <div class="user-name">{{ alumno.nombre }} {{ alumno.apellido }}</div>
+                            <div class="user-email">{{ alumno.email }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color:#6c757d; font-size:0.9rem;">
+                    {% if alumno.fecha_registro %}
+                        {{ alumno.fecha_registro[:10] if alumno.fecha_registro is string else alumno.fecha_registro }}
+                    {% else %}—{% endif %}
+                </td>
+                <td>
+                    {% if alumno.abandono %}
+                        <span class="estado-badge estado-inactivo">❌ Abandono</span>
+                    {% else %}
+                        <span class="estado-badge estado-activo">✅ Activo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="acciones">
+                        <a href="{{ url_for('alumnos.detalle', id=alumno.padron) }}" class="btn-ver">Ver</a>
+                        <a href="{{ url_for('alumnos.editar', id=alumno.padron) }}" class="btn-edit">Editar</a>
+                        <form action="{{ url_for('alumnos.eliminar', id=alumno.padron) }}" method="POST" style="margin:0;" onsubmit="return confirm('¿Eliminar al alumno {{ alumno.nombre }} {{ alumno.apellido }}?')">
+                            <button type="submit" class="btn-del">Eliminar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr id="sinDatos">
+                <td colspan="5">
+                    <div class="empty-state">
+                        <div class="empty-icon">🎓</div>
+                        <h3>No hay alumnos registrados</h3>
+                        <p>Creá el primer alumno usando el botón de arriba.</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="contador" id="contadorFooter">
+        Mostrando <strong id="countVisible">{{ alumnos|length }}</strong> de <strong>{{ alumnos|length }}</strong> alumnos
+    </div>
+</div>
+
+<div class="empty-state" id="emptySearch" style="display:none;">
+    <div class="empty-icon">🔍</div>
+    <h3>Sin resultados</h3>
+    <p>Ningún alumno coincide con los filtros aplicados.</p>
+</div>
+
+<script>
+    const totalAlumnos = {{ alumnos|length }};
+
+    function filtrar() {
+        const busqueda = document.getElementById('buscarInput').value.toLowerCase().trim();
+        const estado   = document.getElementById('estadoFiltro').value;
+        const filas    = document.querySelectorAll('.alumno-row');
+        let visibles   = 0;
+
+        filas.forEach(fila => {
+            const padron  = fila.dataset.padron.toLowerCase();
+            const nombre  = fila.dataset.nombre;
+            const email   = fila.dataset.email;
+            const estFila = fila.dataset.estado;
+
+            const okBusq = !busqueda || padron.includes(busqueda) || nombre.includes(busqueda) || email.includes(busqueda);
+            const okEst  = !estado   || estFila === estado;
+
+            if (okBusq && okEst) {
+                fila.style.display = '';
+                visibles++;
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+
+        document.getElementById('statVisibles').textContent = visibles;
+        document.getElementById('countVisible').textContent = visibles;
+
+        const emptySearch = document.getElementById('emptySearch');
+        const tablaWrapper = document.querySelector('.tabla-wrapper');
+
+        if (visibles === 0 && totalAlumnos > 0) {
+            emptySearch.style.display = 'block';
+            tablaWrapper.style.display = 'none';
+        } else {
+            emptySearch.style.display = 'none';
+            tablaWrapper.style.display = 'block';
+        }
+    }
+
+    function resetFiltros() {
+        document.getElementById('buscarInput').value = '';
+        document.getElementById('estadoFiltro').value = '';
+        filtrar();
+    }
+</script>
+{% endblock %}
