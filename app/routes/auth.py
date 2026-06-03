@@ -41,7 +41,7 @@ def registro():
         resultado = registrar_nuevo_usuario(nombre, apellido, password, email, padron)
 
         if resultado['exito'] == True:
-            flash(f"¡Bienvenido de nuevo, {resultado['datos']['nombre']}!", "success")
+            flash(f"{resultado['mensaje']}!", "success")
             return render_template('auth/login.html', error="¡Cuenta creada con éxito! Iniciá sesión para continuar.")
 
         else:

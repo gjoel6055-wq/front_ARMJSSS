@@ -59,7 +59,8 @@ def registrar_nuevo_usuario(nombre, apellido, password, email, padron ):
         respuesta_api = respuesta.json()
 
         if respuesta.status_code == 201:
-            return {"exito": True, "datos": respuesta_api}
+            mensaje_exito = respuesta_api.get('mensaje')
+            return {"exito": True, "mensaje": mensaje_exito}
 
         else:
             mensaje_error = respuesta_api.get('error', 'Error desconocido en el servidor.')
