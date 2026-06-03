@@ -11,6 +11,11 @@ def listar_notas():
         flash("Debes iniciar sesión para gestionar las notas.", "error")
         return redirect(url_for('auth.login'))
 
+    rol_usuario = session.get('rol')
+    if rol_usuario != 'docente':
+        flash ("Acceso denegado: Solo los docentes pueden gestionar notas.", "danger")
+        return redirect(url_for('dashboard'))
+    
     token = session.get('token')
     headers = {"Authorization": f"Bearer {token}"}
 
