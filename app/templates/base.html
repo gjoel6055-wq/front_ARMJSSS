@@ -21,10 +21,11 @@
                 <li id="nav-btn-docentes"><a href="{{ url_for('docentes.lista') }}" class="btn-navbar-login">Lista docentes</a></li>
                 <li id="nav-btn-equipos"><a href="{{ url_for('equipos.lista') }}" class="btn-navbar-login">Lista equipos</a></li>
                 <li id="nav-btn-cursos"><a href="{{ url_for('cursos.lista') }}" class="btn-navbar-login">Lista cursos</a></li>
+                <li id="nav-btn-crear-cuenta"><a href="{{ url_for('auth.registro') }}" class="btn-navbar-login">Crear Cuenta</a></li>
             {% endif %}
         {% else %}
             <li  id="nav-btn-login"><a href="{{ url_for('auth.login') }}" class = "btn-navbar-login">Iniciar Sesión</a></li>
-            <li id="nav-btn-crear-cuenta"><a href="{{ url_for('auth.registro') }}" class="btn-navbar-login">Crear Cuenta</a></li>
+
 
         {% endif %}
 
