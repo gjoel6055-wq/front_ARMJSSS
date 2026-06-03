@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from services import curso_service
+from app.services import curso_service
 
 cursos_bp = Blueprint("cursos", __name__)
 

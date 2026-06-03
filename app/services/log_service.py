@@ -1,5 +1,5 @@
 import requests
-from constants import API_BASE_URL
+from app.constants import API_BASE_URL
 
 
 def obtener_logs_api(token_usuario, filtros=None):
