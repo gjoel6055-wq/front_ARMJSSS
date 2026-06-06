@@ -64,7 +64,7 @@ def crear():
     if request.method == "POST":
         datos = {
             "nombre":   request.form.get("nombre"),
-            "curso_id": request.form.get("curso_id"),
+            "curso_id": request.form.get("curso_id", type=int),
         }
         try:
             equipo = equipo_service.crear(datos)
