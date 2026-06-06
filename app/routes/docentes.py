@@ -36,12 +36,11 @@ def crear():
 
     if request.method == "POST":
         datos = {
-            # Datos del usuario (backend hace doble insert)
+            "legajo":       request.form.get("legajo", type=int),
             "email":        request.form.get("email"),
             "password":     request.form.get("password"),
             "nombre":       request.form.get("nombre"),
             "apellido":     request.form.get("apellido"),
-            # Datos específicos del docente
             "departamento": request.form.get("departamento"),
         }
         try:
