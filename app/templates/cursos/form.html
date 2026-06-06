@@ -33,7 +33,6 @@
                 <option value="" disabled {% if not curso %}selected{% endif %}>Seleccioná un cuatrimestre</option>
                 <option value="1C" {% if curso and curso.cuatrimestre == '1C' %}selected{% endif %}>1° Cuatrimestre</option>
                 <option value="2C" {% if curso and curso.cuatrimestre == '2C' %}selected{% endif %}>2° Cuatrimestre</option>
-                <option value="verano" {% if curso and curso.cuatrimestre == 'verano' %}selected{% endif %}>Verano</option>
             </select>
         </div>
 

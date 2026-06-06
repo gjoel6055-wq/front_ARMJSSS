@@ -52,7 +52,7 @@ def crear():
         datos = {
             "nombre":       request.form.get("nombre"),
             "cuatrimestre": request.form.get("cuatrimestre"),
-            "anio":         request.form.get("anio"),
+            "anio":         request.form.get("anio", type=int),
             "descripcion":  request.form.get("descripcion"),
         }
         try:
@@ -81,7 +81,7 @@ def editar(curso_id):
         datos = {
             "nombre":       request.form.get("nombre"),
             "cuatrimestre": request.form.get("cuatrimestre"),
-            "anio":         request.form.get("anio"),
+            "anio":         request.form.get("anio", type=int),
             "descripcion":  request.form.get("descripcion"),
         }
         try:
