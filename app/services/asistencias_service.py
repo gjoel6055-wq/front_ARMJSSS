@@ -2,12 +2,13 @@ import requests
 from app.constants import API_BASE_URL
 
 
-def disparar_envio_qr_api(token_usuario):
+def disparar_envio_qr_api(token_usuario, curso_id):
     url = f"{API_BASE_URL}/enviar_mails_asistencia"
     headers = {"Authorization": f"Bearer {token_usuario}"}
+    payload = {"curso_id": curso_id}
 
     try:
-        respuesta = requests.post(url, headers=headers)
+        respuesta = requests.post(url, headers=headers, json=payload)
 
         if respuesta.status_code == 201:
             return {"exito": True, "datos": respuesta.json()}

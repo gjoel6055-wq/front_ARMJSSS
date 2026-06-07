@@ -1,19 +1,29 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from app.services.asistencias_service import disparar_envio_qr_api, asistencias_curso, validar_asistencia_qr
+from app.services import curso_service
 from datetime import datetime
 asistencias_bp = Blueprint("asistencia", __name__)
 
 
 @asistencias_bp.route('/', methods=['GET','POST'])
 def index():
-    return render_template('asistencias/lista.html')
+    try:
+        cursos = curso_service.obtener_todos()
+    except Exception:
+        cursos = []
+    return render_template('asistencias/lista.html', cursos=cursos)
 
 
 @asistencias_bp.route('/generar', methods=['GET', 'POST'])
 def generar():
     token = session.get('token')
+    curso_id = request.form.get('curso_id')
+    
+    if not curso_id:
+        flash("Error: Debe seleccionar un curso para enviar los QRs.", "danger")
+        return redirect(url_for('asistencia.index'))
 
-    resultado = disparar_envio_qr_api(token)
+    resultado = disparar_envio_qr_api(token, curso_id)
 
     if resultado['exito']:
         flash("¡Éxito! Se enviaron los QRs para la clase de hoy.", "success")
@@ -34,13 +44,18 @@ def fecha_clase():
     else:
         fecha = fecha_param
 
+    try:
+        cursos = curso_service.obtener_todos()
+    except Exception:
+        cursos = []
+
     if resultado['exito']:
 
         lista_alumnos = resultado['datos'].get('lista_alumnos', [])
 
-        return render_template('asistencias/lista.html', alumnos=lista_alumnos, fecha_actual=fecha)
+        return render_template('asistencias/lista.html', alumnos=lista_alumnos, fecha_actual=fecha, cursos=cursos)
     else:
-        return render_template('asistencias/lista.html', error=resultado['error'], fecha_actual=fecha)
+        return render_template('asistencias/lista.html', error=resultado['error'], fecha_actual=fecha, cursos=cursos)
 
 
 @asistencias_bp.route('/validar/<string:token>', methods=['GET'])

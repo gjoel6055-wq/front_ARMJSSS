@@ -16,6 +16,7 @@ def login():
             datos_login = resultado['datos']
 
             session['token'] = datos_login['token']
+            session['email'] = datos_login['datos']['email']
             session['usuario_nombre'] = datos_login['datos']['nombre']
             session['usuario_rol'] = datos_login['datos']['rol']
 

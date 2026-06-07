@@ -3,23 +3,25 @@
 {% block title %}Historial de Logs - Gestor FIUBA{% endblock %}
 
 {% block content %}
-<div class="modulo-header">
-    <h2>Auditoría del Sistema</h2>
-    <p>Registro de actividad, accesos y movimientos de los usuarios</p>
+<div class="page-header">
+    <div>
+        <h1>Auditoría del Sistema</h1>
+        <p>Registro de actividad, accesos y movimientos de los usuarios dentro de la plataforma.</p>
+    </div>
 </div>
 
 {% if error %}
-    <div class="alerta-error">
-        {{ error }}
+    <div class="flash-msg flash-danger" style="margin-bottom: 2rem;">
+        <span style="font-weight: 600;">❌ {{ error }}</span>
     </div>
 {% endif %}
 
-<div class="card-filtros">
-    <form action="{{ url_for('log.index') }}" method="GET" class="form-filters">
+<div class="filtros" style="border-radius: 12px;">
+    <form action="{{ url_for('log.index') }}" method="GET" style="display: flex; gap: 1.5rem; width: 100%; align-items: flex-end; flex-wrap: wrap;">
 
-        <div class="form-group grupo-filtro">
-            <label for="filtro_accion">Tipo de Acción</label>
-            <select id="filtro_accion" name="accion" class="select-filtro">
+        <div class="filtro-grupo">
+            <label for="filtro_accion">Filtrar por Acción:</label>
+            <select id="filtro_accion" name="accion" class="filtro-input">
                 <option value="">Todas las acciones</option>
                 <option value="Inicio sesion" {% if accion_buscada == 'Inicio sesion' %}selected{% endif %}>Inicio de Sesión</option>
                 <option value="Login fallido" {% if accion_buscada == 'Login fallido' %}selected{% endif %}>Login Fallido</option>
@@ -36,45 +38,87 @@
                 <option value="Eliminó el curso con ID:" {% if accion_buscada == 'Eliminó un curso' %}selected{% endif %}>Eliminó un curso</option>
                 <option value="Registró un nuevo alumno" {% if accion_buscada == 'Registró un nuevo alumno' %}selected{% endif %}>Registró un nuevo alumno</option>
                 <option value="Actualizó los datos del alumno" {% if accion_buscada == 'Actualizó los datos del alumno' %}selected{% endif %}>Actualizó los datos del alumno</option>
-                <option value="Eliminó a un alumno" {% if accion_buscada == 'Eliminó a un alumno' %}selected{% endif %}>Eliminó a un alumno</option>
-
+                <option value="Eliminó al alumno" {% if accion_buscada == 'Eliminó al alumno' %}selected{% endif %}>Eliminó a un alumno</option>
             </select>
         </div>
 
-        <button type="submit" class="btn-primario btn-filtro">Filtrar</button>
+        <div style="display: flex; gap: 0.8rem;">
+            <button type="submit" class="btn-primario" style="margin: 0; width: auto; padding: 0.7rem 1.5rem;">Aplicar Filtro</button>
+            <a href="{{ url_for('log.index') }}" class="btn-reset" style="text-decoration: none; display: flex; align-items: center;">Limpiar</a>
+        </div>
     </form>
 </div>
 
-<div class="tabla-responsive">
-    <table class="tabla-auditoria">
+<div class="tabla-wrapper" style="border-radius: 12px;">
+    <table class="tabla">
         <thead>
             <tr>
-                <th>ID Log</th>
-                <th>Usuario ID</th>
-                <th>Acción</th>
-                <th>Fecha</th>
-                <th>IP</th>
+                <th style="width: 10%;">ID Log</th>
+                <th style="width: 15%;">Usuario</th>
+                <th style="width: 35%;">Email</th>
+                <th style="width: 35%;">Acción Registrada</th>
+                <th style="width: 25%;">Fecha y Hora</th>
+                <th style="width: 15%;">Dirección IP</th>
             </tr>
         </thead>
         <tbody>
             {% for log in logs %}
             <tr>
-                <td>{{ log.log_id }}</td>
-                <td class="td-usuario">
-                    {{ log.usuario_id if log.usuario_id else 'Anónimo' }}
+                <td>
+                    <span class="padron-badge" style="background: #f1f5f9; color: #64748b;">#{{ log.log_id }}</span>
                 </td>
                 <td>
-                    <span class="badge {% if log.accion == 'Inicio sesion' %}badge-verde{% elif log.accion == 'Login fallido' %}badge-rojo{% else %}badge-gris{% endif %}">
+                    {% if log.usuario_id %}
+                        <div class="user-cell">
+                            <span class="user-name">ID: {{ log.usuario_id }}</span>
+                        </div>
+                    {% else %}
+                        <div class="user-cell">
+                            <span class="user-name" style="color: #64748b; font-style: italic;">Anónimo</span>
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="padron-badge" style="background: #f1f5f9; color: #64748b;">{{ log.email }}</span>
+                </td>
+                <td>
+                    <span class="estado-badge {% if log.accion == 'Inicio sesion' or log.accion.startswith('Nuevo usuario') %}estado-activo{% elif 'fallido' in log.accion or 'Eliminó' in log.accion or 'Dio de baja' in log.accion %}estado-inactivo{% else %}estado-badge{% endif %}" 
+                          {% if 'Creó' in log.accion or 'Registró' in log.accion %}style="background: #e0e7ff; color: #3730a3;"{% endif %}
+                          {% if 'Actualizó' in log.accion or 'Modificó' in log.accion %}style="background: #fef3c7; color: #92400e;"{% endif %}>
+                        {% if 'Inicio sesion' in log.accion %}
+                            <span style="font-size: 1.1em; line-height: 1;"></span>
+                        {% elif 'fallido' in log.accion %}
+                            <span style="font-size: 1.1em; line-height: 1;">️</span>
+                        {% elif 'Cerró' in log.accion %}
+                            <span style="font-size: 1.1em; line-height: 1;"></span>
+                        {% elif 'Eliminó' in log.accion or 'Dio de baja' in log.accion %}
+                            <span style="font-size: 1.1em; line-height: 1;"></span>
+                        {% elif 'Actualizó' in log.accion or 'Modificó' in log.accion %}
+                            <span style="font-size: 1.1em; line-height: 1;">️</span>
+                        {% else %}
+                            <span style="font-size: 1.1em; line-height: 1;"></span>
+                        {% endif %}
                         {{ log.accion }}
                     </span>
                 </td>
-                <td>{{ log.fecha_actividad }}</td>
-                <td class="td-ip">{{ log.ip }}</td>
+                <td style="color: #475569; font-size: 0.9rem;">
+                    {{ log.fecha_actividad }}
+                </td>
+
+                <td>
+                    <span class="padron-badge" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #334155;">
+                        {{ log.ip }}
+                    </span>
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="td-mensaje-vacio">
-                    No se encontraron registros de auditoría para la búsqueda actual.
+                <td colspan="5">
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <h3 style="color: #004b87; margin-bottom: 0.5rem; font-size: 1.4rem;">Sin Resultados</h3>
+                        <p style="margin: 0;">No se encontraron registros de auditoría para la búsqueda actual.</p>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
