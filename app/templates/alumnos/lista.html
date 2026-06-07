@@ -68,6 +68,15 @@
             <option value="inactivo">En abandono</option>
         </select>
     </div>
+    <div class="filtro-grupo" style="flex: 1; min-width: 250px;">
+        <label for="materiaFiltro">Materia (Curso, Cuatrimestre y Año)</label>
+        <select id="materiaFiltro" class="filtro-input" onchange="filtrar()">
+            <option value="">Todas las materias</option>
+            {% for c in cursos %}
+            <option value="{{ c.curso_id }}">{{ c.nombre }} - {{ c.cuatrimestre }} - {{ c.anio }}</option>
+            {% endfor %}
+        </select>
+    </div>
     <button class="btn-reset" onclick="resetFiltros()">✖ Limpiar</button>
 </div>
 
@@ -89,7 +98,9 @@
                 data-padron="{{ alumno.padron }}"
                 data-nombre="{{ alumno.nombre | lower }} {{ alumno.apellido | lower }}"
                 data-email="{{ alumno.email | lower }}"
-                data-estado="{% if alumno.abandono %}inactivo{% else %}activo{% endif %}">
+                data-estado="{% if alumno.abandono %}inactivo{% else %}activo{% endif %}"
+                data-cursos="{% for c in alumno.cursos %}{{ c.curso_id }},{% endfor %}"
+                data-cuatrimestres="{% for c in alumno.cursos %}{{ c.cuatrimestre }},{% endfor %}">
 
                 <td><span class="padron-badge">{{ alumno.padron }}</span></td>
                 <td>
@@ -153,19 +164,27 @@
     function filtrar() {
         const busqueda = document.getElementById('buscarInput').value.toLowerCase().trim();
         const estado   = document.getElementById('estadoFiltro').value;
+        const materia  = document.getElementById('materiaFiltro').value;
         const filas    = document.querySelectorAll('.alumno-row');
         let visibles   = 0;
 
+        console.log("=== Filtrando ===");
+        console.log("Filtros seleccionados -> Busqueda:", busqueda, "Estado:", estado, "Materia:", materia);
+
         filas.forEach(fila => {
-            const padron  = fila.dataset.padron.toLowerCase();
-            const nombre  = fila.dataset.nombre;
-            const email   = fila.dataset.email;
-            const estFila = fila.dataset.estado;
+            const padron  = (fila.dataset.padron || '').toLowerCase().trim();
+            const nombre  = (fila.dataset.nombre || '').trim();
+            const email   = (fila.dataset.email || '').trim();
+            const estFila = (fila.dataset.estado || '').trim();
+            const curFila = (fila.dataset.cursos || '').split(',').map(s => s.trim()).filter(Boolean);
 
             const okBusq = !busqueda || padron.includes(busqueda) || nombre.includes(busqueda) || email.includes(busqueda);
             const okEst  = !estado   || estFila === estado;
+            const okMat  = !materia  || curFila.includes(materia.trim());
 
-            if (okBusq && okEst) {
+            console.log(`Alumno ${nombre} (${padron}):`, {curFila, okMat});
+
+            if (okBusq && okEst && okMat) {
                 fila.style.display = '';
                 visibles++;
             } else {
@@ -191,6 +210,7 @@
     function resetFiltros() {
         document.getElementById('buscarInput').value = '';
         document.getElementById('estadoFiltro').value = '';
+        document.getElementById('materiaFiltro').value = '';
         filtrar();
     }
 </script>

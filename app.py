@@ -1,12 +1,12 @@
 from flask import Flask, render_template
-from routes.auth import auth_bp
-from routes.log import log_bp
-from routes.asistencias import asistencias_bp
-from routes.docentes import docentes_bp
-from routes.equipos import equipos_bp
-from routes.cursos import cursos_bp
-from routes.alumnos import alumnos_bp
-from routes.dashboard import dashboard_bp
+from app.routes.auth import auth_bp
+from app.routes.asistencias import asistencias_bp
+from app.routes.log import log_bp
+from app.routes.docentes import docentes_bp
+from app.routes.equipos import equipos_bp
+from app.routes.cursos import cursos_bp
+from app.routes.alumnos import alumnos_bp
+from app.routes.dashboard import dashboard_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 

@@ -602,7 +602,7 @@ body {
 .texto-peligro { color: #dc3545; font-weight: 600; }
 
 /* ==========================================================================
-   11. ALUMNOS LIST STYLES
+   11. ALUMNOS LIST 
    ========================================================================== */
 .stats-bar {
     display: flex;
@@ -701,11 +701,16 @@ body {
 .estado-inactivo { background: #fee2e2; color: #991b1b; }
 
 .acciones { display: flex; gap: 0.5rem; }
+/* Botón "Ver" (Usado en el listado de alumnos para redirigir al perfil/detalle de un estudiante) */
 .btn-ver  { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; text-decoration: none; background: #e8f1fb; color: #004b87; border: 1px solid #bee3f8; transition: all 0.2s; }
-.btn-edit { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; text-decoration: none; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; transition: all 0.2s; }
-.btn-del  { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; transition: all 0.2s; }
 .btn-ver:hover  { background: #004b87; color: white; }
+
+/* Botón "Editar" (Usado en el listado de alumnos para redirigir al formulario de edición) */
+.btn-edit { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; text-decoration: none; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; transition: all 0.2s; }
 .btn-edit:hover { background: #f59e0b; color: white; }
+
+/* Botón "Eliminar" (Usado en el listado de alumnos para borrar a un estudiante del sistema) */
+.btn-del  { padding: 0.35rem 0.8rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; transition: all 0.2s; }
 .btn-del:hover  { background: #ef4444; color: white; }
 
 .empty-state { text-align: center; padding: 4rem 2rem; color: #6c757d; }
@@ -736,7 +741,60 @@ body {
 .filtro-select-group { display: flex; align-items: center; gap: 0.5rem; }
 .filtro-select-group label { font-size: 0.85rem; font-weight: 700; color: #004b87; text-transform: uppercase; }
 
-/* Shared table styling moved from templates to styles.css */
+.filtros-globales {
+    background: #f0f6ff;
+    border: 1px solid #c8ddf5;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+.filtros-globales-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #004b87;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 0.75rem;
+}
+.filtros-globales-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.filtro-global-select {
+    min-width: 160px;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #c8ddf5;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    background: white;
+    color: #212529;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.filtro-global-select:focus {
+    border-color: #004b87;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,75,135,0.15);
+}
+/* Botón "Limpiar" (Usado en la barra de filtros globales del dashboard para restablecer filtros) */
+.btn-limpiar-filtros {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid #c8ddf5;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-limpiar-filtros:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+    background: #fff5f5;
+}
+
 .tabla-wrapper {
     background: white;
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
@@ -790,7 +848,7 @@ body {
 .nota-baja { background: #fee2e2; color: #991b1b; }
 
 /* ==========================================================================
-   13. ALUMNOS DETAIL STYLES
+   13. ALUMNOS DETAIL 
    ========================================================================== */
 .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: #004b87; text-decoration: none; font-weight: 600; font-size: 0.9rem; margin-bottom: 1.5rem; transition: gap 0.2s; }
 .back-link:hover { gap: 0.7rem; }
@@ -874,6 +932,8 @@ body {
     border-top: 1px solid #e9ecef;
     flex-wrap: wrap;
 }
+
+/* Botón "Editar" (Usado en el detalle/perfil del alumno para entrar al modo edición) */
 .btn-editar {
     padding: 0.75rem 1.5rem;
     background: #004b87;
@@ -887,6 +947,8 @@ body {
     gap: 0.4rem;
 }
 .btn-editar:hover { background: #003a6b; transform: translateY(-1px); }
+
+/* Botón "Eliminar" (Usado en el detalle/perfil del alumno para dar de baja al estudiante) */
 .btn-eliminar {
     padding: 0.75rem 1.5rem;
     background: #fee2e2;
@@ -903,8 +965,9 @@ body {
 }
 .btn-eliminar:hover { background: #ef4444; color: white; border-color: #ef4444; transform: translateY(-1px); }
 
+
 /* ==========================================================================
-   14. ALUMNOS FORM STYLES
+   14. ALUMNOS FORM 
    ========================================================================== */
 .form-card {
     background: white;
@@ -1006,6 +1069,8 @@ input:checked + .slider:before { transform: translateX(22px); }
     border-top: 1px solid #e9ecef;
     justify-content: flex-end;
 }
+
+/* Botón "Enviar" (Usado para confirmar la creación o edición en los formularios) */
 .btn-submit {
     padding: 0.85rem 2rem;
     background: #004b87;
@@ -1018,6 +1083,8 @@ input:checked + .slider:before { transform: translateX(22px); }
     transition: all 0.2s;
 }
 .btn-submit:hover { background: #003a6b; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,75,135,0.3); }
+
+/* Botón "Cancelar" (Usado para volver atrás o salir de los formularios) */
 .btn-cancel {
     padding: 0.85rem 1.5rem;
     background: white;
@@ -1033,5 +1100,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 }
 .btn-cancel:hover { border-color: #004b87; color: #004b87; }
 
+
 @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-
+

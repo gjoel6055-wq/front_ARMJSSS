@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from services import alumno_service
+from app.services import alumno_service
+from app.services import curso_service
 
 alumnos_bp = Blueprint("alumnos", __name__)
 
@@ -20,11 +21,13 @@ def lista():
 
     try:
         alumnos = alumno_service.obtener_alumnos()
+        cursos = curso_service.obtener_todos()
     except ValueError as e:
         flash(str(e), "danger")
         alumnos = []
+        cursos = []
 
-    return render_template("alumnos/lista.html", alumnos=alumnos)
+    return render_template("alumnos/lista.html", alumnos=alumnos, cursos=cursos)
 
 
 @alumnos_bp.route("/alumnos/<int:id>")
@@ -73,7 +76,6 @@ def editar(id):
     if redir:
         return redir
 
-    from services import curso_service
     try:
         alumno = alumno_service.obtener_alumno(id)
         cursos_disponibles = curso_service.obtener_todos()

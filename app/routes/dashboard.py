@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from services.api_client import get, post, put, delete
+from app.services.api_client import get, post, put, delete
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -62,61 +62,60 @@ def index():
         return redirect(url_for("dashboard.index"))
 
     try:
-        todas_notas = get("/notas")
-        evaluaciones = get("/evaluaciones")
-        equipos = get("/equipos")
-        alumnos = get("/alumnos")
-        stats_dashboard = get("/dashboard/estadisticas")
-    except Exception as e:
-        flash(f"Error al conectar con el servidor backend: {str(e)}", "danger")
-        todas_notas, evaluaciones, equipos, alumnos = [], [], [], []
+        todas_notas = get("/notas") or []
+    except Exception:
+        todas_notas = []
+
+    try:
+        cursos = get("/cursos") or []
+    except Exception:
+        cursos = []
+
+    try:
+        stats_dashboard = get("/dashboard/estadisticas") or {}
+    except Exception:
         stats_dashboard = {}
 
-    total_gral = len(todas_notas)
-    aprobados_gral = sum(1 for n in todas_notas if float(n.get("nota", 0)) >= 4.0)
-    reprobados_gral = total_gral - aprobados_gral
-    tasa_gral = (aprobados_gral / total_gral * 100) if total_gral > 0 else 0.0
+    filtro_curso = request.args.get("curso_id", "")
 
+    notas_filtradas = todas_notas
+    if filtro_curso:
+        notas_filtradas = [n for n in notas_filtradas if str(n.get("curso_id")) == filtro_curso]
+
+    total = len(notas_filtradas)
+    aprobados = sum(1 for n in notas_filtradas if float(n.get("nota", 0)) >= 4)
+    reprobados = total - aprobados
+    tasa = (aprobados / total * 100) if total else 0
     stats_gral = {
-        "total": total_gral,
-        "aprobados": aprobados_gral,
-        "reprobados": reprobados_gral,
-        "tasa_aprobacion": tasa_gral
+        "total": total,
+        "aprobados": aprobados,
+        "reprobados": reprobados,
+        "tasa_aprobacion": tasa,
     }
 
+    rol = session.get("usuario_rol")
+    padron = session.get("padron")
     stats_alumno = None
     mis_notas = []
-
-    if rol == "alumno":
-        email_sesion = session.get("usuario_email")
-        alumno_actual = next(
-            (a for a in alumnos if a.get("email") == email_sesion), None
-        )
-        if alumno_actual:
-            padron_alumno = alumno_actual.get("padron")
-            mis_notas = [n for n in todas_notas if n.get("padron") == padron_alumno]
-            
-            total_al = len(mis_notas)
-            aprobados_al = sum(1 for n in mis_notas if float(n.get("nota", 0)) >= 4.0)
-            reprobados_al = total_al - aprobados_al
-            tasa_al = (aprobados_al / total_al * 100) if total_al > 0 else 0.0
-
-            stats_alumno = {
-                "total": total_al,
-                "aprobados": aprobados_al,
-                "reprobados": reprobados_al,
-                "tasa_aprobacion": tasa_al
-            }
+    if rol == "alumno" and padron:
+        mis_notas = [n for n in notas_filtradas if str(n.get("padron")) == str(padron)]
+        total_mias = len(mis_notas)
+        aprobadas_mias = sum(1 for n in mis_notas if float(n.get("nota", 0)) >= 4)
+        stats_alumno = {
+            "total": total_mias,
+            "aprobados": aprobadas_mias,
+            "reprobados": total_mias - aprobadas_mias,
+            "tasa_aprobacion": (aprobadas_mias / total_mias * 100) if total_mias else 0,
+        }
 
     return render_template(
         "dashboard/dashboard.html",
-        notas=todas_notas,
+        notas=notas_filtradas,
         mis_notas=mis_notas,
-        evaluaciones=evaluaciones,
-        equipos=equipos,
-        alumnos=alumnos,
-        rol=rol,
         stats_gral=stats_gral,
         stats_alumno=stats_alumno,
-        stats_dashboard=stats_dashboard
+        stats_dashboard=stats_dashboard,
+        rol=rol,
+        cursos=cursos,
+        filtro_curso=filtro_curso,
     )

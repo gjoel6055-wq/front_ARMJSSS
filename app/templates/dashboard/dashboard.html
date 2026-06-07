@@ -120,6 +120,28 @@
 </div>
 {% endif %}
 
+<!-- Filtros Globales (Materia / Curso / Cuatrimestre) -->
+<div class="filtros-globales">
+    <div class="filtros-globales-titulo">🔎 Filtro Global por Materia y Curso</div>
+    <form method="GET" action="{{ url_for('dashboard.index') }}" class="filtros-globales-form">
+        <div class="filtro-select-group" style="flex: 1; min-width: 300px;">
+            <label for="filtro-curso">Materia (Curso):</label>
+            <select id="filtro-curso" name="curso_id" class="form-control filtro-global-select" onchange="this.form.submit()" style="width: 100%;">
+                <option value="">Todas las materias</option>
+                {% for c in cursos %}
+                <option value="{{ c.curso_id }}" {% if filtro_curso = c.curso_id|string %}selected{% endif %}>
+                    {{ c.nombre }} - {{ c.cuatrimestre }} - {{ c.anio }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="button" 
+        class="btn-limpiar-filtros" 
+        onclick='window.location.href="{{ url_for("dashboard.index") }}"'>✕ Limpiar
+        </button>
+    </form>
+</div>
+
 <!-- Filtros de Orden y Aprobación -->
 <div class="filtros-notas">
     <div class="filtro-select-group">
@@ -205,7 +227,6 @@
 
         var rows = Array.from(tbody.querySelectorAll('.nota-row'));
 
-        // 1. Filtrar filas
         rows.forEach(function(row) {
             var nota = parseFloat(row.getAttribute('data-nota'));
             var show = true;
@@ -217,7 +238,6 @@
             row.style.display = show ? '' : 'none';
         });
 
-        // 2. Ordenar filas
         if (orden === 'high') {
             rows.sort(function(a, b) {
                 return parseFloat(b.getAttribute('data-nota')) - parseFloat(a.getAttribute('data-nota'));
