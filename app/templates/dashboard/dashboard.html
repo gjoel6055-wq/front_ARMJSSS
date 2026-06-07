@@ -129,7 +129,7 @@
             <select id="filtro-curso" name="curso_id" class="form-control filtro-global-select" onchange="this.form.submit()" style="width: 100%;">
                 <option value="">Todas las materias</option>
                 {% for c in cursos %}
-                <option value="{{ c.curso_id }}" {% if filtro_curso = c.curso_id|string %}selected{% endif %}>
+                <option value="{{ c.curso_id }}" {% if filtro_curso == c.curso_id|string %}selected{% endif %}>
                     {{ c.nombre }} - {{ c.cuatrimestre }} - {{ c.anio }}
                 </option>
                 {% endfor %}
