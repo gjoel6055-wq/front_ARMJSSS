@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Notas - Gestor FIUBA{% endblock %}
+{% block content %}
+
+<div class="modulo-header">
+    <h2>Notas</h2>
+    <p>Listado de notas cargadas en el sistema.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in messages %}
+        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div class="card-filtros">
+    <form action="{{ url_for('notas.lista') }}" method="GET"
+          style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+        <div class="form-group" style="margin: 0;">
+            <label for="evaluacion_id">Filtrar por evaluación:</label>
+            <select id="evaluacion_id" name="evaluacion_id" class="select-filtro">
+                <option value="">Todas</option>
+                {% for ev in evaluaciones %}
+                    <option value="{{ ev.evaluacion_id }}"
+                        {% if evaluacion_id_activo == ev.evaluacion_id %}selected{% endif %}>
+                        {{ ev.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-primario"
+                style="width: auto; padding: 0.6rem 1.5rem; margin: 0;">
+            Filtrar
+        </button>
+        <a href="{{ url_for('notas.lista') }}" class="btn-primario"
+           style="width: auto; padding: 0.6rem 1.5rem; margin: 0;
+                  background-color: #6c757d; text-decoration: none; display: inline-block;">
+            Limpiar
+        </a>
+        <a href="{{ url_for('notas.crear') }}" class="btn-primario"
+           style="width: auto; padding: 0.6rem 1.5rem; margin: 0;
+                  text-decoration: none; display: inline-block; margin-left: auto;">
+            + Nueva Nota
+        </a>
+    </form>
+</div>
+
+<div class="tabla-wrapper">
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Alumno</th>
+                <th>Padrón</th>
+                <th>Evaluación</th>
+                <th>Curso</th>
+                <th>Nota</th>
+                <th>Observación</th>
+                <th>Fecha carga</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nota in notas %}
+            <tr>
+                <td><span class="padron-badge">#{{ nota.nota_id }}</span></td>
+                <td>{{ nota.alumno_nombre }} {{ nota.alumno_apellido }}</td>
+                <td><span class="padron-badge">{{ nota.padron }}</span></td>
+                <td>{{ nota.evaluacion_nombre }}</td>
+                <td>{{ nota.curso_nombre }}</td>
+                <td>
+                    <span class="badge {% if nota.nota >= 6 %}badge-azul{% else %}badge-rojo{% endif %}">
+                        {{ nota.nota }}
+                    </span>
+                </td>
+                <td>{{ nota.observacion or '—' }}</td>
+                <td style="font-size: 0.9rem; color: #6c757d;">{{ nota.fecha_carga }}</td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{{ url_for('notas.editar', nota_id=nota.nota_id) }}"
+                           class="btn-primario"
+                           style="width: auto; padding: 0.3rem 0.9rem; margin: 0;
+                                  font-size: 0.85rem; text-decoration: none; display: inline-block;">
+                            Editar
+                        </a>
+                        <form method="POST"
+                              action="{{ url_for('notas.eliminar', nota_id=nota.nota_id) }}"
+                              onsubmit="return confirm('¿Eliminar esta nota?')">
+                            <button type="submit" class="btn-primario"
+                                    style="width: auto; padding: 0.3rem 0.9rem; margin: 0;
+                                           font-size: 0.85rem; background-color: #dc3545;">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9">
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <h3 style="color: #004b87;">Sin notas</h3>
+                        <p>No hay notas cargadas para el filtro seleccionado.</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
