@@ -29,28 +29,28 @@
     <div class="calif-card">
         <span class="calif-card-icon">📈</span>
         <div>
-            <div class="calif-card-num">{{ "%.1f"|format(stats_alumno.tasa_aprobacion) }}%</div>
+            <div class="calif-card-num" id="stat-mis-aprobacion">{{ "%.1f"|format(stats_alumno.tasa_aprobacion) }}%</div>
             <div class="calif-card-lbl">Mi Aprobación</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">✅</span>
         <div>
-            <div class="calif-card-num">{{ stats_alumno.aprobados }}</div>
+            <div class="calif-card-num" id="stat-mis-aprobados">{{ stats_alumno.aprobados }}</div>
             <div class="calif-card-lbl">Mis Aprobadas</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">❌</span>
         <div>
-            <div class="calif-card-num">{{ stats_alumno.reprobados }}</div>
+            <div class="calif-card-num" id="stat-mis-reprobados">{{ stats_alumno.reprobados }}</div>
             <div class="calif-card-lbl">Mis Reprobadas</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">📊</span>
         <div>
-            <div class="calif-card-num">{{ stats_alumno.total }}</div>
+            <div class="calif-card-num" id="stat-mis-total">{{ stats_alumno.total }}</div>
             <div class="calif-card-lbl">Mis Evaluaciones</div>
         </div>
     </div>
@@ -64,28 +64,28 @@
     <div class="calif-card">
         <span class="calif-card-icon">📈</span>
         <div>
-            <div class="calif-card-num">{{ "%.1f"|format(stats_gral.tasa_aprobacion) }}%</div>
+            <div class="calif-card-num" id="stat-gral-aprobacion">{{ "%.1f"|format(stats_gral.tasa_aprobacion) }}%</div>
             <div class="calif-card-lbl">Aprobación Gral.</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">✅</span>
         <div>
-            <div class="calif-card-num">{{ stats_gral.aprobados }}</div>
+            <div class="calif-card-num" id="stat-gral-aprobados">{{ stats_gral.aprobados }}</div>
             <div class="calif-card-lbl">Aprobados Gral.</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">❌</span>
         <div>
-            <div class="calif-card-num">{{ stats_gral.reprobados }}</div>
+            <div class="calif-card-num" id="stat-gral-reprobados">{{ stats_gral.reprobados }}</div>
             <div class="calif-card-lbl">Reprobados Gral.</div>
         </div>
     </div>
     <div class="calif-card">
         <span class="calif-card-icon">📊</span>
         <div>
-            <div class="calif-card-num">{{ stats_gral.total }}</div>
+            <div class="calif-card-num" id="stat-gral-total">{{ stats_gral.total }}</div>
             <div class="calif-card-lbl">Total Notas Gral.</div>
         </div>
     </div>
@@ -93,7 +93,7 @@
     <div class="calif-card">
         <span class="calif-card-icon">⭐</span>
         <div>
-            <div class="calif-card-num">
+            <div class="calif-card-num" id="stat-gral-promedio">
                 {% if stats_dashboard.promedioNotas %}
                     {{ "%.2f"|format(stats_dashboard.promedioNotas | float) }}
                 {% else %}
@@ -120,6 +120,25 @@
 </div>
 {% endif %}
 
+<!-- Filtros Globales (Materia / Curso / Cuatrimestre) -->
+<div class="filtros-globales">
+    <div class="filtros-globales-titulo">🔎 Filtro Global por Materia y Curso</div>
+    <div class="filtros-globales-form">
+        <div class="filtro-select-group" style="flex: 1; min-width: 300px;">
+            <label for="filtro-curso">Materia (Curso):</label>
+            <select id="filtro-curso" class="form-control filtro-global-select" onchange="aplicarFiltrosYOrden()" style="width: 100%;">
+                <option value="">Todas las materias</option>
+                {% for c in cursos %}
+                <option value="{{ c.curso_id }}">
+                    {{ c.nombre }} - {{ c.cuatrimestre }} - {{ c.anio }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="button" class="btn-limpiar-filtros" onclick="resetFiltrosDashboard()">✕ Limpiar</button>
+    </div>
+</div>
+
 <!-- Filtros de Orden y Aprobación -->
 <div class="filtros-notas">
     <div class="filtro-select-group">
@@ -138,6 +157,7 @@
             <option value="reprobados">Solo Reprobados (< 4)</option>
         </select>
     </div>
+    <button type="button" class="btn-reset" onclick="resetFiltrosDashboard()" style="margin-left: auto;">✖ Limpiar todo</button>
 </div>
 
 <!-- Listado / Visualización de Notas -->
@@ -166,7 +186,7 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            <tr class="nota-row" data-nota="{{ n.nota | float }}" {% if es_mia %}style="background-color: #f0f6ff; border-left: 4px solid #004b87;"{% endif %}>
+            <tr class="nota-row" data-nota="{{ n.nota | float }}" data-curso_id="{{ n.curso_id }}" {% if es_mia %}style="background-color: #f0f6ff; border-left: 4px solid #004b87;"{% endif %}>
                 <td style="font-weight: 600;">
                     {{ n.alumno_nombre }} {{ n.alumno_apellido }}
                     {% if es_mia %}
@@ -197,27 +217,98 @@
 </div>
 
 <script>
+    const STATS_IDS = {
+        mis_aprobacion: 'stat-mis-aprobacion',
+        mis_aprobados: 'stat-mis-aprobados',
+        mis_reprobados: 'stat-mis-reprobados',
+        mis_total: 'stat-mis-total',
+        gral_aprobacion: 'stat-gral-aprobacion',
+        gral_aprobados: 'stat-gral-aprobados',
+        gral_reprobados: 'stat-gral-reprobados',
+        gral_total: 'stat-gral-total',
+        gral_promedio: 'stat-gral-promedio'
+    };
+
+    function actualizarEstadisticas() {
+        const tbody = document.getElementById('tbody-calificaciones');
+        if (!tbody) return;
+
+        const rows = Array.from(tbody.querySelectorAll('.nota-row'));
+        const rowsVisibles = rows.filter(row => row.style.display !== 'none');
+
+        let aprobados = 0;
+        let reprobados = 0;
+        let sumaNotas = 0;
+
+        rowsVisibles.forEach(row => {
+            const nota = parseFloat(row.getAttribute('data-nota'));
+            sumaNotas += nota;
+            if (nota >= 4.0) {
+                aprobados++;
+            } else {
+                reprobados++;
+            }
+        });
+
+        const total = rowsVisibles.length;
+        const porcentajeAprobacion = total > 0 ? (aprobados / total * 100).toFixed(1) : 0.0;
+        const promedio = total > 0 ? (sumaNotas / total).toFixed(2) : 0.00;
+
+        const elem_mis_aprob = document.getElementById(STATS_IDS.mis_aprobacion);
+        if (elem_mis_aprob) elem_mis_aprob.textContent = porcentajeAprobacion + '%';
+
+        const elem_mis_aprob_cnt = document.getElementById(STATS_IDS.mis_aprobados);
+        if (elem_mis_aprob_cnt) elem_mis_aprob_cnt.textContent = aprobados;
+
+        const elem_mis_reprob = document.getElementById(STATS_IDS.mis_reprobados);
+        if (elem_mis_reprob) elem_mis_reprob.textContent = reprobados;
+
+        const elem_mis_total = document.getElementById(STATS_IDS.mis_total);
+        if (elem_mis_total) elem_mis_total.textContent = total;
+
+        const elem_gral_aprob = document.getElementById(STATS_IDS.gral_aprobacion);
+        if (elem_gral_aprob) elem_gral_aprob.textContent = porcentajeAprobacion + '%';
+
+        const elem_gral_aprob_cnt = document.getElementById(STATS_IDS.gral_aprobados);
+        if (elem_gral_aprob_cnt) elem_gral_aprob_cnt.textContent = aprobados;
+
+        const elem_gral_reprob = document.getElementById(STATS_IDS.gral_reprobados);
+        if (elem_gral_reprob) elem_gral_reprob.textContent = reprobados;
+
+        const elem_gral_total = document.getElementById(STATS_IDS.gral_total);
+        if (elem_gral_total) elem_gral_total.textContent = total;
+
+        const elem_gral_prom = document.getElementById(STATS_IDS.gral_promedio);
+        if (elem_gral_prom) elem_gral_prom.textContent = promedio;
+
+        console.log('Estadísticas actualizadas:', { total, aprobados, reprobados, porcentajeAprobacion, promedio });
+    }
+
     function aplicarFiltrosYOrden() {
         var orden = document.getElementById('select-orden').value;
         var estado = document.getElementById('select-estado-filtro').value;
+        var cursoid = document.getElementById('filtro-curso').value;
         var tbody = document.getElementById('tbody-calificaciones');
         if (!tbody) return;
 
         var rows = Array.from(tbody.querySelectorAll('.nota-row'));
 
-        // 1. Filtrar filas
         rows.forEach(function(row) {
             var nota = parseFloat(row.getAttribute('data-nota'));
+            var curso = row.getAttribute('data-curso_id');
             var show = true;
-            if (estado === 'aprobados' && nota < 4.0) {
+            
+            if (cursoid && curso !== cursoid) {
                 show = false;
-            } else if (estado === 'reprobados' && nota >= 4.0) {
+            }
+            if (show && estado === 'aprobados' && nota < 4.0) {
+                show = false;
+            } else if (show && estado === 'reprobados' && nota >= 4.0) {
                 show = false;
             }
             row.style.display = show ? '' : 'none';
         });
 
-        // 2. Ordenar filas
         if (orden === 'high') {
             rows.sort(function(a, b) {
                 return parseFloat(b.getAttribute('data-nota')) - parseFloat(a.getAttribute('data-nota'));
@@ -231,6 +322,15 @@
         rows.forEach(function(row) {
             tbody.appendChild(row);
         });
+
+        actualizarEstadisticas();
+    }
+
+    function resetFiltrosDashboard() {
+        document.getElementById('filtro-curso').value = '';
+        document.getElementById('select-orden').value = 'default';
+        document.getElementById('select-estado-filtro').value = 'todos';
+        aplicarFiltrosYOrden();
     }
 </script>
 {% endblock %}
