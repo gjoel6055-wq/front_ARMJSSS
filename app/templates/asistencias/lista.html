@@ -3,59 +3,83 @@
 {% block title %}Asistencias Diarias - Gestor FIUBA{% endblock %}
 
 {% block content %}
-<div class="header-acciones">
-    <div class="header-titulos">
-        <h2>Control de Asistencia Diaria</h2>
-        <p>Listado de alumnos y su estado para la clase seleccionada</p>
+<div class="page-header" >
+    <div>
+        <h1>Control de Asistencia</h1>
+        <p>Listado de alumnos y su estado de presentismo para la clase seleccionada.</p>
     </div>
 
-    <form action="{{ url_for('asistencia.generar') }}" method="POST" class="form-enlinea">
-    <button type="submit" class="btn-primario btn-exito btn-auto">
-        Enviar QRs del Día
-    </button>
-</form>
-</div>
-
-<div class="card-filtros">
-    <form method="GET" action="{{ url_for('asistencia.fecha_clase') }}" class="form-filtros-flex">
-        <div class="form-group form-group-flex">
-            <label for="filtro_fecha">Seleccionar Fecha de Clase:</label>
-            <input type="date" id="filtro_fecha" name="fecha" value="{{ fecha_actual }}" class="select-filtro">
-        </div>
-        <button type="submit" class="btn-primario btn-auto">Ver Asistencias</button>
-
-        <a href="{{ url_for('asistencia.fecha_clase') }}" class="btn-primario btn-secundario btn-auto texto-centrado">Ir a Hoy</a>
+    <form action="{{ url_for('asistencia.generar') }}" method="POST" style="display: flex; gap: 0.8rem; align-items: center; background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <select name="curso_id" class="filtro-input" required style="border: none; min-width: 250px;">
+            <option value="" disabled selected>Seleccione un curso...</option>
+            {% for curso in cursos %}
+                <option value="{{ curso.curso_id }}">{{ curso.nombre }} ({{ curso.cuatrimestre }} - {{ curso.anio }})</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-primario" style="margin: 0; background: white; color: #004b87; width: auto; padding: 0.7rem 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            Enviar QRs del Día
+        </button>
     </form>
 </div>
 
-<div class="tabla-responsive">
-    <table class="tabla-auditoria">
+<div class="filtros" style="border-radius: 12px;">
+    <form method="GET" action="{{ url_for('asistencia.fecha_clase') }}" style="display: flex; gap: 1.5rem; width: 100%; align-items: flex-end; flex-wrap: wrap;">
+        <div class="filtro-grupo">
+            <label for="filtro_fecha">Seleccionar Fecha de Clase:</label>
+            <input type="date" id="filtro_fecha" name="fecha" value="{{ fecha_actual }}" class="filtro-input">
+        </div>
+        <div style="display: flex; gap: 0.8rem;">
+            <button type="submit" class="btn-primario" style="margin: 0; width: auto; padding: 0.7rem 1.5rem;">Filtrar Resultados</button>
+            <a href="{{ url_for('asistencia.fecha_clase') }}" class="btn-reset" style="text-decoration: none; display: flex; align-items: center;">Ir a Hoy</a>
+        </div>
+    </form>
+</div>
+
+<div class="tabla-wrapper" style="border-radius: 12px;">
+    <table class="tabla">
         <thead>
             <tr>
-                <th>Padrón</th>
+                <th style="width: 15%;">Padrón</th>
                 <th>Alumno</th>
-                <th>Email</th>
-                <th class="texto-centrado">Estado</th>
+                <th style="text-align: center; width: 20%;">Estado</th>
             </tr>
         </thead>
         <tbody>
             {% for alumno in alumnos %}
             <tr>
-                <td class="td-usuario">{{ alumno.padron }}</td>
-                <td> {{ alumno.apellido }} {{ alumno.nombre }}</td>
-                <td class="td-detalle">{{ alumno.email }}</td>
-
-                <td class="texto-centrado">
+                <td>
+                    <span class="padron-badge">{{ alumno.padron }}</span>
+                </td>
+                <td>
+                    <div class="user-cell">
+                        <div class="avatar-alumno">{{ alumno.nombre[0] }}{{ alumno.apellido[0] }}</div>
+                        <div>
+                            <div class="user-name">{{ alumno.apellido }}, {{ alumno.nombre }}</div>
+                            <div class="user-email">{{ alumno.email }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: center;">
                     {% if alumno.presente == 1 %}
-                        <span class="badge badge-verde">Presente</span>
+                        <span class="estado-badge estado-activo">
+                            <span style="font-size: 1.1em; line-height: 1;">✓</span> Presente
+                        </span>
                     {% else %}
-                        <span class="badge badge-gris">Ausente</span>
+                        <span class="estado-badge estado-inactivo">
+                            <span style="font-size: 1.1em; line-height: 1;">✕</span> Ausente
+                        </span>
                     {% endif %}
                 </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" class="td-mensaje-vacio">No hay alumnos registrados en el curso.</td>
+                <td colspan="3">
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <h3 style="color: #004b87; margin-bottom: 0.5rem; font-size: 1.4rem;">Sin Registros</h3>
+                        <p style="margin: 0;">No hay alumnos inscriptos o no se encontraron asistencias para esta fecha.</p>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

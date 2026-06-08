@@ -20,17 +20,3 @@ def obtener_logs_api(token_usuario, filtros=None):
     except requests.exceptions.RequestException as e:
         print(f"Error al traer logs: {e}")
         return {"exito": False, "error": "Error de conexión con la API."}
-
-
-def obtener_log_por_id_api(token_usuario, id_log):
-    url = f"{API_BASE_URL}/logs/{id_log}"
-    headers = {"Authorization": f"Bearer {token_usuario}"}
-
-    try:
-        respuesta = requests.get(url, headers=headers)
-        if respuesta.status_code == 200:
-            return {"exito": True, "datos": respuesta.json().get('log')}
-        else:
-            return {"exito": False, "error": respuesta.json().get('error')}
-    except requests.exceptions.RequestException:
-        return {"exito": False, "error": "Error de conexión con la API."}
