@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from app.services.api_client import get, post, put, delete
+from app.services.api_client import get
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
