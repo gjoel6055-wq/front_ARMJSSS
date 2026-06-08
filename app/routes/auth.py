@@ -42,8 +42,8 @@ def registro():
         resultado = registrar_nuevo_usuario(nombre, apellido, password, email, padron)
 
         if resultado['exito'] == True:
-            flash(f"{resultado['mensaje']}!", "success")
-            return render_template('auth/login.html', error="¡Cuenta creada con éxito! Iniciá sesión para continuar.")
+            flash(f"¡Cuenta creada con éxito! Iniciá sesión para continuar.", "success")
+            return redirect(url_for('auth.registro'))
 
         else:
             return render_template('auth/registro.html', error=resultado['error'])

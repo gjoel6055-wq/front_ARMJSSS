@@ -726,6 +726,8 @@ body {
 }
 .flash-success { background: #d1fae5; color: #065f46; }
 .flash-danger { background: #fee2e2; color: #991b1b; }
+.flash-warning { background: #fef3c7; color: #92400e; }
+.flash-info { background: #dbeafe; color: #1e40af; }
 
 .calif-stats { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
 .calif-card { background: white; border-radius: 12px; padding: 1.25rem; border: 1px solid #e9ecef; box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex: 1; min-width: 150px; display: flex; align-items: center; gap: 1rem; }
