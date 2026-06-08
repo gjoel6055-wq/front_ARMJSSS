@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestor Universitario FIUBA{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="navbar-logo">Sistema FIUBA</a>
+        <ul>
+        {% if session.get('token') %}
+        <li id="nav-btn-logout"><a href="{{ url_for('auth.logout') }}" class="btn-navbar-login">Cerrar Sesión</a></li>
+        <li id="nav-btn-dashboard"><a href="{{ url_for('dashboard.index') }}" class="btn-navbar-login">Dashboard</a></li>
+        {% if session.get('usuario_rol') == 'docente' %}
+                <li><a href="{{ url_for('evaluaciones.lista') }}" class="btn-navbar-login">Evaluaciones</a></li>
+                <li id="nav-btn-alumnos"><a href="{{ url_for('alumnos.lista') }}" class="btn-navbar-login">Lista alumnos</a></li>
+                <li id="nav-btn-logs"><a href="{{ url_for('log.index') }}" class="btn-navbar-login">Historial logs</a></li>
+                <li id="nav-btn-asistencia"><a href="{{ url_for('asistencia.index') }}" class="btn-navbar-login">Asistencias</a></li>
+                <li id="nav-btn-docentes"><a href="{{ url_for('docentes.lista') }}" class="btn-navbar-login">Lista docentes</a></li>
+                <li id="nav-btn-equipos"><a href="{{ url_for('equipos.lista') }}" class="btn-navbar-login">Lista equipos</a></li>
+                <li id="nav-btn-cursos"><a href="{{ url_for('cursos.lista') }}" class="btn-navbar-login">Lista cursos</a></li>
+                <li id="nav-btn-crear-cuenta"><a href="{{ url_for('auth.registro') }}" class="btn-navbar-login">Crear Cuenta</a></li>
+            {% endif %}
+        {% else %}
+            <li  id="nav-btn-login"><a href="{{ url_for('auth.login') }}" class = "btn-navbar-login">Iniciar Sesión</a></li>
+
+
+        {% endif %}
+
+
+        </ul>
+    </nav>
+
+    <main class="contenedor">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="footer-contenido">
+            <p class="contenido-footer">2026 Sistema FIUBA - Gestión de Cursos.</p>
+        </div>
+    </footer>
+</body>
+</html>
