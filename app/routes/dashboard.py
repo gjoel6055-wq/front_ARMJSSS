@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from app.services.api_client import get, post, put, delete
+from app.services.api_client import get
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -12,54 +12,13 @@ def _requiere_login():
     return None
 
 
-@dashboard_bp.route("/dashboard", methods=["GET", "POST"])
+@dashboard_bp.route("/dashboard", methods=["GET"])
 def index():
     redir = _requiere_login()
     if redir:
         return redir
 
     rol = session.get("usuario_rol")
-    error = None
-
-    if request.method == "POST":
-        if rol != "docente":
-            flash("No tenés permiso para cargar notas.", "danger")
-            return redirect(url_for("dashboard.index"))
-
-        tipo_carga = request.form.get("tipo_carga") 
-        evaluacion_id = request.form.get("evaluacion_id")
-        nota = request.form.get("nota")
-        observacion = request.form.get("observacion", "")
-
-        try:
-            if tipo_carga == "grupal":
-                equipo_id = request.form.get("equipo_id")
-                post(
-                    "/notas/grupal",
-                    json={
-                        "equipo_id": int(equipo_id),
-                        "evaluacion_id": int(evaluacion_id),
-                        "nota": float(nota),
-                        "observacion": observacion,
-                    },
-                )
-                flash("Nota grupal cargada correctamente.", "success")
-            else:
-                padron = request.form.get("padron")
-                post(
-                    "/notas",
-                    json={
-                        "padron": int(padron),
-                        "evaluacion_id": int(evaluacion_id),
-                        "nota": float(nota),
-                        "observacion": observacion,
-                    },
-                )
-                flash("Nota individual cargada correctamente.", "success")
-        except Exception as e:
-            flash(f"Error al cargar la nota: {str(e)}", "danger")
-
-        return redirect(url_for("dashboard.index"))
 
     try:
         todas_notas = get("/notas") or []
