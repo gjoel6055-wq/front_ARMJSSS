@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+import os
+import logging
 from app.routes.auth import auth_bp
 from app.routes.log import log_bp
 from app.routes.asistencias import asistencias_bp
@@ -11,7 +13,12 @@ from app.routes.evaluaciones import evaluaciones_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
-app.secret_key = 'una_clave_super_secreta_para_fiuba_2026'
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-temporal')
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(log_bp, url_prefix='/log')

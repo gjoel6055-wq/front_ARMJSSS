@@ -20,10 +20,7 @@ def login():
             session['usuario_nombre'] = datos_login['datos']['nombre']
             session['usuario_rol'] = datos_login['datos']['rol']
 
-            if datos_login['datos']['rol'] == 'alumno':
-                return redirect(url_for('index'))
-
-            if datos_login['datos']['rol'] == 'docente':
+            if datos_login['datos']['rol'] in ('alumno', 'docente'):
                 return redirect(url_for('index'))
 
         else:

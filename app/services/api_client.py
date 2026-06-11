@@ -1,9 +1,6 @@
-import os
+from constants import API_BASE_URL
 import requests
 from flask import session
-
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
-TIMEOUT = 10
 
 
 def _headers():
@@ -17,7 +14,7 @@ def _headers():
 
 def _url(path: str) -> str:
     """Concatena la base con el path, asegurando una sola barra."""
-    return BACKEND_URL + "/" + path.lstrip("/")
+    return API_BASE_URL + "/" + path.lstrip("/")
 
 
 def _manejar_respuesta(response: requests.Response):

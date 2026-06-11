@@ -1,6 +1,8 @@
 import requests
 from app.constants import API_BASE_URL
+import logging
 
+logger = logging.getLogger(__name__)
 
 def hacer_login(email, password):
     url = f"{API_BASE_URL}/login"
@@ -22,7 +24,7 @@ def hacer_login(email, password):
             return {"exito": False, "error": mensaje_error}
 
     except requests.exceptions.RequestException as e:
-        print(f"Error de conexión con la API: {e}")
+        logger.error(f"Error de conexión con la API: {e}")
         return {"exito": False, "error": "Error de conexión con la API. Intentá más tarde."}
 
 
@@ -40,7 +42,7 @@ def hacer_logout(token):
         return False
 
     except requests.exceptions.RequestException as e:
-        print(f"Error de conexión al cerrar sesión en la API: {e}")
+        logger.error(f"Error de conexión al cerrar sesión en la API: {e}")
         return False
 
 def registrar_nuevo_usuario(nombre, apellido, password, email, padron ):
@@ -67,5 +69,5 @@ def registrar_nuevo_usuario(nombre, apellido, password, email, padron ):
             return {"exito": False, "error": mensaje_error}
 
     except requests.exceptions.RequestException as e:
-        print(f"Error de conexión con la API: {e}")
+        logger.error(f"Error de conexión con la API: {e}")
         return {"exito": False, "error": "Error de conexión con la API. Intentá más tarde."}
