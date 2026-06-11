@@ -137,3 +137,4 @@ Route (Vista) → Service (Cliente HTTP) → API Backend
 | Joel | Auth (UI), Asistencias (Generador y Validador QR), Log de Auditoría |
 | Rafael | Listado de Alumnos, Dashboard |
 | Shirley | Gestión de Docentes, Cursos, Equipos |
+git 
