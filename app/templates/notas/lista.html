@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Notas - Gestor FIUBA{% endblock %}
+{% block content %}
+
+
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1>💯 Notas</h1>
+        <p>Listado de notas cargadas en el sistema.</p>
+    </div>
+    {% if es_docente %}
+    <div>
+        <a href="{{ url_for('notas.crear_nota') }}" class="btn-primario" style="margin: 0; text-decoration: none;">
+            + Nueva Nota
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card-filtros">
+    <form action="{{ url_for('notas.lista') }}" method="GET" class="form-filtros">
+        <div class="grupo-filtro">
+            <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Filtrar por evaluación</label>
+            <select id="evaluacion_id" name="evaluacion_id" class="select-filtro">
+                <option value="">Todas</option>
+                {% for ev in evaluaciones %}
+                    <option value="{{ ev.evaluacion_id }}"
+                        {% if evaluacion_id_activo == ev.evaluacion_id %}selected{% endif %}>
+                        {{ ev.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-primario btn-filtro">Filtrar</button>
+        {% if evaluacion_id_activo %}
+            <a href="{{ url_for('notas.lista') }}" 
+               class="btn-primario btn-filtro"
+               style="background-color: #6c757d; text-decoration: none; display: inline-block; text-align: center;">
+                Limpiar
+            </a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="tabla-wrapper">
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Alumno</th>
+                <th>Padrón</th>
+                <th>Evaluación</th>
+                <th>Curso</th>
+                <th>Nota</th>
+                <th>Observación</th>
+                <th>Fecha carga</th>
+                {% if es_docente %}<th>Acciones</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if notas %}
+                {% for nota in notas %}
+                <tr>
+                    <td><span class="padron-badge">#{{ nota.nota_id }}</span></td>
+                    <td style="font-weight: 600;">{{ nota.alumno_nombre }} {{ nota.alumno_apellido }}</td>
+                    <td><span class="padron-badge">{{ nota.padron }}</span></td>
+                    <td style="font-weight: 600; color: #004b87;">{{ nota.evaluacion_nombre }}</td>
+                    <td>{{ nota.curso_nombre }}</td>
+                    <td>
+                        {% set val = nota.nota | float %}
+                        <span class="nota-badge {% if val >= 7 %}nota-alta{% elif val >= 4 %}nota-media{% else %}nota-baja{% endif %}">
+                            {{ "%.1f" | format(val) }}
+                        </span>
+                    </td>
+                    <td style="font-size:0.88rem; color:#495057;">{{ nota.observacion if nota.observacion else '—' }}</td>
+                    <td style="font-size:0.88rem; color:#6c757d;">{{ nota.fecha_carga[:10] if nota.fecha_carga is string else nota.fecha_carga }}</td>
+
+                    {% if es_docente %}
+                    <td>
+                        <div class="acciones">
+                            <a href="{{ url_for('notas.editar', nota_id=nota.nota_id) }}" class="btn-edit">Editar</a>
+                            <form method="POST"
+                                  action="{{ url_for('notas.eliminar', nota_id=nota.nota_id) }}"
+                                  style="margin: 0;"
+                                  onsubmit="return confirm('¿Eliminar esta nota?')">
+                                <button type="submit" class="btn-del">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="{{ 9 if es_docente else 8 }}">
+                        <div class="empty-state">
+                            <div class="empty-icon">📝</div>
+                            <h3 style="color: #004b87;">Sin notas</h3>
+                            <p>No hay notas cargadas para el filtro seleccionado.</p>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
