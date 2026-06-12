@@ -38,6 +38,7 @@
     </form>
 </div>
 
+{% if session.get('usuario_rol') == 'docente' %}
 <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
     <a href="{{ url_for('evaluaciones.crear') }}"
        class="btn-primario"
@@ -45,6 +46,7 @@
         + Nueva Evaluación
     </a>
 </div>
+{% endif %}
 
 <div class="tabla-responsive">
     <table class="tabla-auditoria">
@@ -77,17 +79,19 @@
                         <a href="{{ url_for('evaluaciones.detalle', evaluacion_id=ev.evaluacion_id) }}"
                            class="badge badge-azul"
                            style="text-decoration: none; margin-right: 4px;">Ver</a>
-                        <a href="{{ url_for('evaluaciones.editar', evaluacion_id=ev.evaluacion_id) }}"
-                           class="badge badge-gris"
-                           style="text-decoration: none; margin-right: 4px;">Editar</a>
-                        <form method="POST"
-                              action="{{ url_for('evaluaciones.eliminar', evaluacion_id=ev.evaluacion_id) }}"
-                              style="display: inline;"
-                              onsubmit="return confirm('¿Eliminar la evaluación {{ ev.nombre }}?')">
-                            <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">
-                                Eliminar
-                            </button>
-                        </form>
+                        {% if session.get('usuario_rol') == 'docente' %}
+                            <a href="{{ url_for('evaluaciones.editar', evaluacion_id=ev.evaluacion_id) }}"
+                               class="badge badge-gris"
+                               style="text-decoration: none; margin-right: 4px;">Editar</a>
+                            <form method="POST"
+                                  action="{{ url_for('evaluaciones.eliminar', evaluacion_id=ev.evaluacion_id) }}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('¿Eliminar la evaluación {{ ev.nombre }}?')">
+                                <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">
+                                    Eliminar
+                                </button>
+                            </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
