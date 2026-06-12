@@ -7,12 +7,6 @@
     <p>{{ 'Modificá los datos de la evaluación.' if accion == 'editar' else 'Completá los datos para registrar una nueva evaluación.' }}</p>
 </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% for categoria, mensaje in messages %}
-        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
-    {% endfor %}
-{% endwith %}
-
 <div class="card-filtros" style="max-width: 600px;">
     <form method="POST">
 
@@ -60,11 +54,12 @@
 
         <div class="form-group">
             <label for="fecha">Fecha *</label>
+            {% set fecha_val = evaluacion.evaluacion_fecha or evaluacion.fecha if evaluacion else '' %}
             <input
                 type="date"
                 id="fecha"
                 name="fecha"
-                value="{{ evaluacion.evaluacion_fecha or evaluacion.fecha if evaluacion else '' }}"
+                value="{{ (fecha_val | string)[:10] if fecha_val else '' }}"
                 required
             >
         </div>
