@@ -10,6 +10,7 @@ from app.routes.cursos import cursos_bp
 from app.routes.alumnos import alumnos_bp
 from app.routes.dashboard import dashboard_bp
 from app.routes.evaluaciones import evaluaciones_bp
+from app.routes.notas import notas_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
@@ -29,6 +30,7 @@ app.register_blueprint(cursos_bp)
 app.register_blueprint(alumnos_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(evaluaciones_bp)
+app.register_blueprint(notas_bp)
 
 
 @app.route('/')
