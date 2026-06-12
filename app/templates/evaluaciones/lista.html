@@ -2,16 +2,19 @@
 {% block title %}Evaluaciones - Gestor FIUBA{% endblock %}
 {% block content %}
 
-<div class="modulo-header">
-    <h2>Evaluaciones</h2>
-    <p>Listado de evaluaciones registradas. Podés filtrar por curso.</p>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1>📝 Evaluaciones</h1>
+        <p>Listado de evaluaciones registradas. Podés filtrar por curso.</p>
+    </div>
+    {% if session.get('usuario_rol') == 'docente' %}
+    <div>
+        <a href="{{ url_for('evaluaciones.crear') }}" class="btn-primario" style="margin: 0; text-decoration: none;">
+            + Nueva Evaluación
+        </a>
+    </div>
+    {% endif %}
 </div>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% for categoria, mensaje in messages %}
-        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
-    {% endfor %}
-{% endwith %}
 
 <div class="card-filtros">
     <form method="GET" action="{{ url_for('evaluaciones.lista') }}" class="form-filtros">
@@ -38,16 +41,8 @@
     </form>
 </div>
 
-<div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
-    <a href="{{ url_for('evaluaciones.crear') }}"
-       class="btn-primario"
-       style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
-        + Nueva Evaluación
-    </a>
-</div>
-
-<div class="tabla-responsive">
-    <table class="tabla-auditoria">
+<div class="tabla-wrapper">
+    <table class="tabla">
         <thead>
             <tr>
                 <th>ID</th>
@@ -63,42 +58,42 @@
             {% if evaluaciones %}
                 {% for ev in evaluaciones %}
                 <tr>
-                    <td class="td-ip">{{ ev.evaluacion_id }}</td>
-                    <td><strong>{{ ev.nombre }}</strong></td>
+                    <td><span class="padron-badge">#{{ ev.evaluacion_id }}</span></td>
+                    <td style="font-weight: 600; color: #004b87;">{{ ev.nombre }}</td>
+                    <td>{{ ev.tipo_nombre or ev.tipo_id }}</td>
+                    <td>{{ ev.curso_nombre or ev.curso_id }}</td>
+                    
+                    {% set f = ev.evaluacion_fecha or ev.fecha %}
+                    <td style="font-size:0.88rem; color:#6c757d;">{{ (f | string)[:10] if f else '—' }}</td>
+                    
+                    <td style="font-size:0.88rem; color:#495057;">{{ ev.peso }}</td>
+                    
                     <td>
-                        <span class="badge badge-gris">{{ ev.tipo_nombre or ev.tipo_id }}</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-azul">{{ ev.curso_nombre or ev.curso_id }}</span>
-                    </td>
-                    <td class="td-ip">{{ ev.evaluacion_fecha or ev.fecha or '—' }}</td>
-                    <td>{{ ev.peso }}</td>
-                    <td>
-                        <a href="{{ url_for('evaluaciones.detalle', evaluacion_id=ev.evaluacion_id) }}"
-                           class="badge badge-azul"
-                           style="text-decoration: none; margin-right: 4px;">Ver</a>
-                        <a href="{{ url_for('evaluaciones.editar', evaluacion_id=ev.evaluacion_id) }}"
-                           class="badge badge-gris"
-                           style="text-decoration: none; margin-right: 4px;">Editar</a>
-                        <form method="POST"
-                              action="{{ url_for('evaluaciones.eliminar', evaluacion_id=ev.evaluacion_id) }}"
-                              style="display: inline;"
-                              onsubmit="return confirm('¿Eliminar la evaluación {{ ev.nombre }}?')">
-                            <button type="submit" class="badge badge-rojo" style="border: none; cursor: pointer;">
-                                Eliminar
-                            </button>
-                        </form>
+                        <div class="acciones">
+                            <a href="{{ url_for('evaluaciones.detalle', evaluacion_id=ev.evaluacion_id) }}" 
+                               class="btn-edit" style="background-color: #004b87; color: white;">Ver</a>
+                            {% if session.get('usuario_rol') == 'docente' %}
+                                <a href="{{ url_for('evaluaciones.editar', evaluacion_id=ev.evaluacion_id) }}" 
+                                   class="btn-edit">Editar</a>
+                                <form method="POST"
+                                      action="{{ url_for('evaluaciones.eliminar', evaluacion_id=ev.evaluacion_id) }}"
+                                      style="margin: 0;"
+                                      onsubmit="return confirm('¿Eliminar la evaluación {{ ev.nombre }}?')">
+                                    <button type="submit" class="btn-del">Eliminar</button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="7" class="td-mensaje-vacio">
-                        {% if curso_id_activo %}
-                            No hay evaluaciones para el curso seleccionado.
-                        {% else %}
-                            No hay evaluaciones registradas.
-                        {% endif %}
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-icon">📝</div>
+                            <h3 style="color: #004b87;">Sin evaluaciones</h3>
+                            <p>{% if curso_id_activo %}No hay evaluaciones para el curso seleccionado.{% else %}No hay evaluaciones registradas.{% endif %}</p>
+                        </div>
                     </td>
                 </tr>
             {% endif %}
