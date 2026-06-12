@@ -7,50 +7,39 @@
     <p>Detalle de la evaluación seleccionada.</p>
 </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% for categoria, mensaje in messages %}
-        <div class="alerta-{{ 'error' if categoria == 'danger' else 'exito' }}">{{ mensaje }}</div>
-    {% endfor %}
-{% endwith %}
 
 <div class="card-filtros">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-
         <div>
             <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Nombre</p>
             <p style="margin: 0.25rem 0 0 0; font-size: 1.05rem; font-weight: bold; color: #212529;">
                 {{ evaluacion.nombre }}
             </p>
         </div>
-
         <div>
             <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Tipo</p>
             <p style="margin: 0.25rem 0 0 0;">
                 <span class="badge badge-gris">{{ evaluacion.tipo_nombre or evaluacion.tipo_id }}</span>
             </p>
         </div>
-
         <div>
             <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Curso</p>
             <p style="margin: 0.25rem 0 0 0;">
                 <span class="badge badge-azul">{{ evaluacion.curso_nombre or evaluacion.curso_id }}</span>
             </p>
         </div>
-
         <div>
             <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Fecha</p>
             <p style="margin: 0.25rem 0 0 0; font-family: monospace; font-size: 1rem;">
                 {{ evaluacion.evaluacion_fecha or evaluacion.fecha or '—' }}
             </p>
         </div>
-
         <div>
             <p style="margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Peso</p>
             <p style="margin: 0.25rem 0 0 0; font-size: 1.05rem;">
                 {{ evaluacion.peso }}
             </p>
         </div>
-
     </div>
 
     {% if evaluacion.descripcion %}
@@ -62,25 +51,29 @@
 </div>
 
 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-    <a href="{{ url_for('evaluaciones.editar', evaluacion_id=evaluacion.evaluacion_id) }}"
-       class="btn-primario"
-       style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
-        Editar
-    </a>
+    {% if session.get('usuario_rol') == 'docente' %}
+        <a href="{{ url_for('evaluaciones.editar', evaluacion_id=evaluacion.evaluacion_id) }}"
+           class="btn-primario"
+           style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block;">
+            Editar
+        </a>
+    {% endif %}
     <a href="{{ url_for('evaluaciones.lista') }}"
        class="btn-primario"
        style="width: auto; padding: 0.6rem 1.5rem; margin: 0; text-decoration: none; display: inline-block; background-color: #6c757d;">
         ← Volver a la lista
     </a>
-    <form method="POST"
-          action="{{ url_for('evaluaciones.eliminar', evaluacion_id=evaluacion.evaluacion_id) }}"
-          onsubmit="return confirm('¿Eliminar la evaluación {{ evaluacion.nombre }}? Esta acción no se puede deshacer.')">
-        <button type="submit"
-                class="btn-primario"
-                style="width: auto; padding: 0.6rem 1.5rem; margin: 0; background-color: #dc3545;">
-            Eliminar
-        </button>
-    </form>
+    {% if session.get('usuario_rol') == 'docente' %}
+        <form method="POST"
+              action="{{ url_for('evaluaciones.eliminar', evaluacion_id=evaluacion.evaluacion_id) }}"
+              onsubmit="return confirm('¿Eliminar la evaluación {{ evaluacion.nombre }}? Esta acción no se puede deshacer.')">
+            <button type="submit"
+                    class="btn-primario"
+                    style="width: auto; padding: 0.6rem 1.5rem; margin: 0; background-color: #dc3545;">
+                Eliminar
+            </button>
+        </form>
+    {% endif %}
 </div>
 
 {% endblock %}
