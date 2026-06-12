@@ -87,7 +87,7 @@ Copiá el archivo de ejemplo para crear tu propio `.env`:
 cp .env.example .env
 ```
 
-Editá el archivo `.env`. Acá lo más importante es asegurarte de que apunte a la URL correcta donde está corriendo tu Backend (por defecto, puerto 5000):
+Editá el archivo `.env`. Acá lo más importante es asegurarte de que apunte a la URL correcta donde está corriendo tu Backend:
 
 ```env
 API_URL=http://127.0.0.1:8080
@@ -103,7 +103,7 @@ python app.py
 ```
 *(Nota: Opcionalmente podés correrlo con `flask run --port=5001` para evitar conflictos de puerto con el backend)*
 
-La interfaz gráfica quedará disponible ingresando desde tu navegador a `http://localhost:8080`.
+La interfaz gráfica quedará disponible ingresando desde tu navegador a `http://localhost:5030`.
 
 ---
 
