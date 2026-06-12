@@ -74,7 +74,7 @@ def editar(id):
     if redir:
         return redir
 
-    from services import curso_service
+    from app.services import curso_service
     try:
         alumno = alumno_service.obtener_alumno(id)
         cursos_disponibles = curso_service.obtener_todos()

@@ -1,4 +1,4 @@
-from constants import API_BASE_URL
+from app.constants import API_BASE_URL
 import requests
 from flask import session
 
