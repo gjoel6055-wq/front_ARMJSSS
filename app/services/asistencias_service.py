@@ -1,5 +1,8 @@
 import requests
 from app.constants import API_BASE_URL
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def disparar_envio_qr_api(token_usuario, curso_id):
@@ -57,6 +60,6 @@ def validar_asistencia_qr(token_qr, token_alumno):
         else:
             return {'estado': 'error', 'mensaje': datos.get('error', 'Error al procesar el QR')}
 
-    except Exception as e:
-        print(f"Error de conexión con la API Backend: {e}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error de conexión con la API Backend: {e}")
         return {'estado': 'error', 'mensaje': 'Error de conexión con el servidor de la facultad.'}

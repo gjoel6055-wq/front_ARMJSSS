@@ -1,6 +1,8 @@
 import requests
 from app.constants import API_BASE_URL
+import logging
 
+logger = logging.getLogger(__name__)
 
 def obtener_logs_api(token_usuario, filtros=None):
     url = f"{API_BASE_URL}/historial_logs"
@@ -18,5 +20,5 @@ def obtener_logs_api(token_usuario, filtros=None):
             return {"exito": False, "error": mensaje_error}
 
     except requests.exceptions.RequestException as e:
-        print(f"Error al traer logs: {e}")
+        logger.error(f"Error al traer logs: {e}")
         return {"exito": False, "error": "Error de conexión con la API."}
