@@ -1,7 +1,7 @@
 from app.constants import API_BASE_URL
 import requests
 from flask import session
-TIMEOUT = 20
+TIMEOUT = 35
 
 
 def _headers():
